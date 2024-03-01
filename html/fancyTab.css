@@ -1,0 +1,17 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0; /* Removes scroll bars */
+    overflow: hidden;
+}
+
+#image{
+    background-size: cover; /* Lets image cover whole screen */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll; /* Image will stay on screen while scrolling */
+    width: 100vw;
+    height: 100vh;
+    margin: 0; /* Removes scroll bars */
+    position: absolute;
+}
