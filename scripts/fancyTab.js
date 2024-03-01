@@ -44,6 +44,7 @@ function displayWeatherInfo(weatherInfo){
     weatherInfo.style.display = `block`
     
     setWeatherIcon(weatherInfo.weather[0].id)
+    setDayCycleIcon(weatherInfo)
 
     let lon = weatherInfo.coord.lon //hover info for city name
     let lat = weatherInfo.coord.lat //hover info for city name
@@ -75,4 +76,32 @@ function setWeatherIcon(weatherCode){
         case (weatherCode >= 800) && (weatherCode < 900): return icon.innerText = "cloud"
         default: return icon.innerText = "emergency_home"
     }
+}
+
+function setDayCycleIcon(weatherInfo){
+    let currentTime = weatherInfo.dt
+    let sunrise = weatherInfo.sys.sunrise
+    let sunset = weatherInfo.sys.sunset
+    let isDayTime = (currentTime >= sunrise) && (currentTime <= sunset)
+    let isBeforeMidnight = (currentTime >= sunrise) && (currentTime >= sunset)
+    let percentageOfCycleOver
+
+    if(isDayTime){ //daytime
+        let dayLength = sunset - sunrise
+        percentageOfCycleOver = (currentTime - sunrise) / dayLength
+    }else if(isBeforeMidnight){ //nighttime before midnight
+        let nightLength = (sunrise + 86400) - sunset
+        percentageOfCycleOver = (currentTime - sunset) / nightLength
+    }else{ //nighttime after midnight
+        let nightLength = sunrise  - (sunset - 86400)
+        percentageOfCycleOver = (currentTime - (sunset - 86400)) / nightLength
+    }
+    let x = percentageOfCycleOver * 150
+    let y = Math.sin((180*(1-percentageOfCycleOver)) * Math.PI / 180) * 75
+
+    let dayCycleIcon = document.getElementById("dayCycleIcon")
+    dayCycleIcon.src = isDayTime ? "../images/dayCycleIcon.svg" : "../images/nightCycleIcon.svg"
+    dayCycleIcon.style.position = "absolute"
+    dayCycleIcon.style.left = (innerWidth - 187 + x).toFixed() + "px"
+    dayCycleIcon.style.top = (innerHeight - 35 - y).toFixed() + "px"
 }

@@ -48,3 +48,11 @@ body::after {
     display: none;
     z-index: 2;
 }
+
+#dayCycleIcon{
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    width: 30px;
+    height: 30px;
+}
