@@ -1,4 +1,7 @@
 body {
+    display: flex;
+    flex-direction: column; /* Items stacked vertically */
+    align-items: center;  /* Items centered horizontally */
     width: 100vw;
     height: 100vh;
     margin: 0; /* Removes scroll bars */
@@ -16,6 +19,19 @@ body::after {
     margin: 0;
 }
 
+.text {
+    font-family: "Jost", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    color: white;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px  1px 0 #000,
+            1px  1px 0 #000;
+    line-height: 0.75;
+}
+
 #image{
     background-size: cover; /* Lets image cover whole screen */
     background-position: center;
@@ -28,9 +44,9 @@ body::after {
 }
 
 #arrow{
-    position: fixed;
-    bottom: 15px; /* arrow is positioned at the bottom edge of the screen */
-    left: 50%; /* arrow is positioned at the center of the x-axis */
+    position: relative;
+    margin-top: auto;
+    margin-bottom: 200px;
     z-index:1; /* arrow is rendered above box-shadow of body::after */
     background-color: transparent;
     font-size: 0;
@@ -49,10 +65,26 @@ body::after {
     z-index: 2;
 }
 
-#dayCycleIcon{
-    position: absolute;
-    left: 50px;
-    top: 50px;
-    width: 30px;
-    height: 30px;
+#clock{
+    position: relative; /* Needed for margin-top to work */
+    margin-top: 50px;  /* Specific Y value for positioning */
+    display: flex;
+    flex-direction: column; /* Items stacked vertically */
+    align-items: center;  /* Items centered horizontally */
+    gap: 15px;  /* Spacing of 15px between all flex items */
 }
+
+#time {
+    font-size: 128px;
+    font-weight: 400;
+}
+
+#day{
+    font-size: 40px;
+    font-weight: 500;
+}
+
+/* font-weight:
+   400 	Regular
+   500 	Medium
+   600 	Semi Bold */

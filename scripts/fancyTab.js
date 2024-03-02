@@ -1,4 +1,12 @@
-window.onload = getRandomImage
+window.onload = loadWindow
+
+//---LOAD_WINDOW---
+function loadWindow(){
+    getRandomImage()
+    updateClock()
+    getWeatherInfo()
+}
+
 //---CREDENTIALS---
 async function getCredentials() {
     let apiCredentialsResponse = await fetch("../config.json")
@@ -14,6 +22,22 @@ async function getRandomImage(){
     let image = document.getElementById("image")
     image.style.backgroundImage = `url("${imageURL}")`
     image.style.filter = `grayscale(100%)`
+}
+
+
+//---CLOCK_UPDATE---
+function updateClock(){
+    let date = new Date();
+
+    let hours = date.getHours().toString().padStart(2, '0');
+    let minutes = date.getMinutes().toString().padStart(2, '0');
+    let weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
+    
+    let clockTime = document.getElementById("time")
+    let clockDay = document.getElementById("day")
+    
+    clockTime.innerText = `${hours}:${minutes}`
+    clockDay.innerText = weekday
 }
 
 
@@ -40,11 +64,13 @@ async function onWeatherInfoError(positionError, accessKey){
 }
 
 function displayWeatherInfo(weatherInfo){
-    let weatherInfoElement = document.getElementById("weatherInfo")
-    weatherInfo.style.display = `block`
+    //let weatherInfoElement = document.getElementById("weatherInfo")
+    //weatherInfoElement.style.display = `block`
     
     setWeatherIcon(weatherInfo.weather[0].id)
     setDayCycleIcon(weatherInfo)
+
+    console.log(weatherInfo)
 
     let lon = weatherInfo.coord.lon //hover info for city name
     let lat = weatherInfo.coord.lat //hover info for city name
@@ -58,10 +84,8 @@ function displayWeatherInfo(weatherInfo){
     let windSpeed = weatherInfo.wind.speed
     let windDirection = weatherInfo["wind"]["deg"]
     let visibility = weatherInfo.visibility
-    let rainInMm = weatherInfo["rain"]["1h"]
-    let snowInMm = weatherInfo["snow"]["1h"]
-
-    console.log(weatherInfo)
+    let rainInMM = "rain" in weatherInfo ?  weatherInfo["rain"]["1h"] : ""
+    let snowInMM = "snow" in weatherInfo ?  weatherInfo["snow"]["1h"] : ""
 }
 
 function setWeatherIcon(weatherCode){
