@@ -19,7 +19,7 @@ body::after {
     margin: 0;
 }
 
-.text {
+.text{
     font-family: "Jost", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -82,6 +82,48 @@ body::after {
 #day{
     font-size: 40px;
     font-weight: 500;
+}
+
+#searchBar{
+    position: relative;
+    margin-top: 447px;
+    display: flex;
+    flex-direction: row;
+}
+
+#searchBarField{
+    position: relative;
+    width: 800px;
+    height: 50px;
+    padding: 0;
+    border-radius: 30px;
+    border: 4px solid black;
+    background-color: rgba(0,0,0,0.75);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    font-size: 24px;
+    font-weight: 500;
+    font-family: "Jost", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+#searchBarButton{
+    background: none;
+    border: none;
+    margin-left: -45px;
+    z-index: 2;
+}
+
+#searchBarIcon{
+    width: 25px;
+    height: 25px;
+}
+
+[type="search"]::-webkit-search-cancel-button, /* remove default x icon from searchBarField */
+[type="search"]::-webkit-search-decoration { /* remove default suggestions from searchBarField */
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 /* font-weight:

@@ -4,6 +4,7 @@ window.onload = loadWindow
 function loadWindow(){
     getRandomImage()
     updateClock()
+    updateSearchBar()
     getWeatherInfo()
 }
 
@@ -128,4 +129,31 @@ function setDayCycleIcon(weatherInfo){
     dayCycleIcon.style.position = "absolute"
     dayCycleIcon.style.left = (innerWidth - 187 + x).toFixed() + "px"
     dayCycleIcon.style.top = (innerHeight - 35 - y).toFixed() + "px"
+}
+
+
+//---SEARCH_BAR---
+function updateSearchBar(){
+    let searchBarField = document.getElementById("searchBarField")
+    let date = new Date();
+    let hours = date.getHours()
+    
+    switch(true){
+        case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = "Good Morning, Luca. Ready to search the world?";
+        case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = "Good Afternoon, Luca. Ready to search the world?";
+        case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = "Good Evening, Luca. Ready to search the world?";
+        case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = "Get some sleep, Luca. Tomorrow you can search the world.";
+    }
+    
+    let searchBarPosition = searchBarField.getBoundingClientRect();
+    let searchBarIcon = document.getElementById("searchBarIcon")
+    searchBarIcon.left = searchBarPosition.right - searchBarIcon.style.width
+    searchBarIcon.top = searchBarPosition.top
+}
+
+function searchBarOnClick(){
+    let searchBarField = document.getElementById("searchBarField")
+    let query = searchBarField.value
+    window.open(`https://google.com/search?q=${query}`, window.name)
+    searchBar.value = ""
 }
