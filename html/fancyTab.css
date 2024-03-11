@@ -8,17 +8,6 @@ body {
     overflow: hidden;
 }
 
-/*body::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    width: 100%;
-    height: 10px; !* Adjust shadow size *!
-    box-shadow: 0 0 20px 20px var(--primaryColor); !* Adjust shadow properties *!
-    margin: 0;
-}*/
-
 .text{
     font-family: "Jost", sans-serif;
     font-optical-sizing: auto;
@@ -61,18 +50,6 @@ body {
     position: absolute;
 }
 
-/*#arrow{
-    position: relative;
-    margin-top: auto;
-    margin-bottom: 200px;
-    z-index:1; !* arrow is rendered above box-shadow of body::after *!
-    background-color: transparent;
-    font-size: 0;
-    border: none;
-    padding-inline: 0;
-    scale: 400%;
-}*/
-
 #weatherInfo{
     position: fixed;
     bottom:0;
@@ -89,7 +66,6 @@ body {
     display: flex;
     flex-direction: column; /* Items stacked vertically */
     align-items: center;  /* Items centered horizontally */
-    gap: 15px;  /* Spacing of 15px between all flex items */
 }
 
 #time {
