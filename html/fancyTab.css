@@ -8,16 +8,16 @@ body {
     overflow: hidden;
 }
 
-body::after {
+/*body::after {
     content: "";
     position: absolute;
     bottom: -10px;
     left: 0;
     width: 100%;
-    height: 10px; /* Adjust shadow size */
-    box-shadow: 0 0 20px 20px blueviolet; /* Adjust shadow properties */
+    height: 10px; !* Adjust shadow size *!
+    box-shadow: 0 0 20px 20px var(--primaryColor); !* Adjust shadow properties *!
     margin: 0;
-}
+}*/
 
 .text{
     font-family: "Jost", sans-serif;
@@ -61,17 +61,17 @@ body::after {
     position: absolute;
 }
 
-#arrow{
+/*#arrow{
     position: relative;
     margin-top: auto;
     margin-bottom: 200px;
-    z-index:1; /* arrow is rendered above box-shadow of body::after */
+    z-index:1; !* arrow is rendered above box-shadow of body::after *!
     background-color: transparent;
     font-size: 0;
     border: none;
     padding-inline: 0;
     scale: 400%;
-}
+}*/
 
 #weatherInfo{
     position: fixed;
