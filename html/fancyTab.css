@@ -83,7 +83,7 @@ body {
     z-index: 2;
 }
 
-#clock{
+#dashboard{
     position: relative; /* Needed for margin-top to work */
     margin-top: 50px;  /* Specific Y value for positioning */
     display: flex;
@@ -100,6 +100,9 @@ body {
 #day{
     font-size: 40px;
     font-weight: 500;
+    margin-top: 15px;
+}
+
 #shortcuts{
     position: relative;
     display: flex;
@@ -145,13 +148,20 @@ body {
 #lowerShortcuts img:hover{
     scale: 1.1;
 }
+
+#date{
+    font-size: 32px;
+    font-weight: 500;
+    margin-top: 26px;
+}
 }
 
 #searchBar{
     position: relative;
-    margin-top: 447px;
+    margin-top: 16px;
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 #searchBarField{

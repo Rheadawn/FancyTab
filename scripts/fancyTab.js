@@ -63,12 +63,17 @@ function updateClock(){
     let hours = date.getHours().toString().padStart(2, '0');
     let minutes = date.getMinutes().toString().padStart(2, '0');
     let weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
+    let day = date.getDate().toString().padStart(2, `0`)
+    let month = (date.getMonth() + 1).toString().padStart(2, `0`)
+    let year = date.getFullYear()
     
     let clockTime = document.getElementById("time")
     let clockDay = document.getElementById("day")
+    let clockDate = document.getElementById("date")
     
     clockTime.innerText = `${hours}:${minutes}`
     clockDay.innerText = weekday
+    clockDate.innerText = `${day}.${month}.${year}`
 }
 
 
