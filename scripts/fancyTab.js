@@ -95,50 +95,105 @@ async function getWeatherInfo(){
     let credentials = await getCredentials()
     let accessKey = credentials.weatherAPI.accessKey
     navigator.geolocation.getCurrentPosition(
-        (position) => onWeatherInfoSuccess(position, accessKey),
-        (positionError) => onWeatherInfoError(positionError, accessKey)
+        (position) => onGeolocationSuccess(position, accessKey),
+        (positionError) => onGeolocationError(positionError, accessKey)
     )
 }
 
-async function onWeatherInfoSuccess(position, accessKey){
+async function onGeolocationSuccess(position, accessKey){
     let lat = position.coords.latitude
     let lon = position.coords.longitude
-    let weatherInfo = await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=de&appid=${accessKey}`)).json()
+    let weatherInfo = await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json()
     displayWeatherInfo(weatherInfo)
+    let forecast = await (await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json()
+    displayForecast(forecast)
 }
 
-async function onWeatherInfoError(positionError, accessKey){
-    let weatherInfo = await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=51.8306&lon=7.0443&units=metric&lang=de&appid=${accessKey}`)).json() // On Error default location: Reken
+async function onGeolocationError(positionError, accessKey){ // On Error default location: Reken
+    let weatherInfo = await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=51.8306&lon=7.0443&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json()
     displayWeatherInfo(weatherInfo)
+    let forecast = await (await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=51.8306&lon=7.0443&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json()
+    displayForecast(forecast)
 }
 
 function displayWeatherInfo(weatherInfo){
-    //let weatherInfoElement = document.getElementById("weatherInfo")
-    //weatherInfoElement.style.display = `block`
-    
-    setWeatherIcon(weatherInfo.weather[0].id)
+    let icon = document.getElementById("weatherIcon")
+    setWeatherIcon(icon, weatherInfo.weather[0].id)
     setDayCycleIcon(weatherInfo)
-
-    console.log(weatherInfo)
-
-    let lon = weatherInfo.coord.lon //hover info for city name
-    let lat = weatherInfo.coord.lat //hover info for city name
-    let tempActual = weatherInfo.main.temp
-    let tempFeels = weatherInfo.main.feels_like
-    let tempMax = weatherInfo.main.temp_max
-    let tempMin = weatherInfo.main.temp_min
+    
+    let tempActual = weatherInfo.main.temp.toFixed(1)
+    let tempFeels = weatherInfo.main.feels_like.toFixed(1)
+    let tempMax = weatherInfo.main.temp_max.toFixed(1)
+    let tempMin = weatherInfo.main.temp_min.toFixed(1)
     let humidity = weatherInfo.main.humidity
     let cityName = weatherInfo.name
-    let weatherDescription = weatherInfo.weather[0].description
+    let weatherDescription = weatherInfo.weather[0].main
     let windSpeed = weatherInfo.wind.speed
     let windDirection = weatherInfo["wind"]["deg"]
-    let visibility = weatherInfo.visibility
-    let rainInMM = "rain" in weatherInfo ?  weatherInfo["rain"]["1h"] : ""
-    let snowInMM = "snow" in weatherInfo ?  weatherInfo["snow"]["1h"] : ""
+    let visibility = weatherInfo.visibility / 1000
+    let rainInMM = "rain" in weatherInfo ? weatherInfo["rain"]["1h"].toFixed(0) : ""
+    let snowInMM = "snow" in weatherInfo ? weatherInfo["snow"]["1h"].toFixed(0) : ""
+    
+    document.getElementById("amountOfRain").innerText = (rainInMM !== "")? `${rainInMM}mm` : `${snowInMM}mm`
+    document.getElementById("amountOfRain").style.visibility = (rainInMM !== "" || snowInMM !== "")? "visible" : "hidden"
+    document.getElementById("weatherDescription").innerText = (selectedLanguage === "English")? weatherDescription : convertWeatherDescriptionToGerman(weatherDescription)
+    document.getElementById("weatherLocation").innerText = cityName
+    document.getElementById("minTemp").innerText = `MIN ${tempMin}${temperatureUnit}`
+    document.getElementById("maxTemp").innerText = `MAX ${tempMax}${temperatureUnit}`
+    document.getElementById("actualTemp").innerText = `${tempFeels}${temperatureUnit}`
+    document.getElementById("feelsLikeTemp").innerText = `FEELS LIKE ${tempActual}${temperatureUnit}`
+    document.getElementById("windDirectionText").innerText = `${windDirection}°`
+    document.getElementById("windDirectionIcon").style.transform = `rotate(${windDirection}deg)`
+    document.getElementById("windSpeedText").innerText = `${windSpeed} ${speedUnit}`
+    document.getElementById("humidityText").innerText = `${humidity}%`
+    document.getElementById("visibilityText").innerText = `${visibility} km`
 }
 
-function setWeatherIcon(weatherCode){
-    let icon = document.getElementById("weatherIcon")
+let daysOfTheWeekEnglish = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+let daysOfTheWeekGerman = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"]
+function displayForecast(forecast){
+    let forecastIcons = document.querySelectorAll("#forecastDays span")
+    forecastIcons.forEach((element, index) => {
+        setWeatherIcon(element, forecast.list[index].weather[0].id)
+    })
+    
+    let dayArray = (selectedLanguage === "English")? daysOfTheWeekEnglish : daysOfTheWeekGerman
+    let currentDayIndex = (new Date()).getDay()
+    let forecastDays = document.querySelectorAll("#forecastDays p.forecastDayName")
+    forecastDays.forEach((element, index) => {
+        element.innerText = dayArray[(index + currentDayIndex + 1) % 7]
+    })
+    
+    let forecastDescriptions = document.querySelectorAll("#forecastDays p.forecastDayDescription")
+    forecastDescriptions.forEach((element, index) => {
+        let description = forecast.list[index].weather[0].main
+        element.innerText = (selectedLanguage === "English")? description : convertWeatherDescriptionToGerman(description) 
+    })
+    
+    document.getElementById("forecastText").innerText = (selectedLanguage === "English")? "5-DAY FORECAST" : "5-TAGE VORSCHAU"
+}
+
+function convertWeatherDescriptionToGerman(description){
+    switch(description){
+        case "Thunderstorm" : return "Gewitter";
+        case "Drizzle" : return "Fissel";
+        case "Rain" : return "Regen";
+        case "Snow" : return "Schnee";
+        case "Mist" : return "Nebel";
+        case "Smoke" : return "Rauch";
+        case "Haze" : return "Dunst";
+        case "Dust" : return "Staub";
+        case "Fog" : return "Nebel";
+        case "Sand" : return "Sand";
+        case "Ash" : return "Asche";
+        case "Squall" : return "Böen";
+        case "Tornado" : return "Tornado";
+        case "Clear" : return "Klar";
+        case "Clouds" : return "Wolken";
+    }
+}
+
+function setWeatherIcon(icon, weatherCode){
     switch(true){
         case (weatherCode >= 200) && (weatherCode < 300): return icon.innerText = "thunderstorm"
         case (weatherCode >= 300) && (weatherCode < 400): return icon.innerText = "weather_mix"
@@ -158,16 +213,20 @@ function setDayCycleIcon(weatherInfo){
     let isDayTime = (currentTime >= sunrise) && (currentTime <= sunset)
     let isBeforeMidnight = (currentTime >= sunrise) && (currentTime >= sunset)
     let percentageOfCycleOver
+    let dayCycleText = document.getElementById("dayCycleText")
 
     if(isDayTime){ //daytime
         let dayLength = sunset - sunrise
         percentageOfCycleOver = (currentTime - sunrise) / dayLength
+        dayCycleText.innerText = (selectedLanguage === "English")? "DAY CYCLE" : "TAGESZYKLUS"
     }else if(isBeforeMidnight){ //nighttime before midnight
         let nightLength = (sunrise + 86400) - sunset
         percentageOfCycleOver = (currentTime - sunset) / nightLength
+        dayCycleText.innerText = (selectedLanguage === "English")? "NIGHT CYCLE" : "NACHTZYKLUS"
     }else{ //nighttime after midnight
         let nightLength = sunrise  - (sunset - 86400)
         percentageOfCycleOver = (currentTime - (sunset - 86400)) / nightLength
+        dayCycleText.innerText = (selectedLanguage === "English")? "NIGHT CYCLE" : "NACHTZYKLUS"
     }
     let x = percentageOfCycleOver * 150
     let y = Math.sin((180*(1-percentageOfCycleOver)) * Math.PI / 180) * 75
@@ -175,8 +234,8 @@ function setDayCycleIcon(weatherInfo){
     let dayCycleIcon = document.getElementById("dayCycleIcon")
     dayCycleIcon.src = isDayTime ? "../images/dayCycleIcon.svg" : "../images/nightCycleIcon.svg"
     dayCycleIcon.style.position = "absolute"
-    dayCycleIcon.style.left = (innerWidth - 187 + x).toFixed() + "px"
-    dayCycleIcon.style.top = (innerHeight - 35 - y).toFixed() + "px"
+    dayCycleIcon.style.left = x + "px"
+    dayCycleIcon.style.top = (75 - y) + "px"
 }
 
 
@@ -185,15 +244,7 @@ let searchEngine = "google"
 
 function updateSearchBar(){
     let searchBarField = document.getElementById("searchBarField")
-    let date = new Date();
-    let hours = date.getHours()
-    
-    switch(true){
-        case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = "Good Morning, Luca. Ready to search the world?";
-        case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = "Good Afternoon, Luca. Ready to search the world?";
-        case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = "Good Evening, Luca. Ready to search the world?";
-        case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = "Get some sleep, Luca. Tomorrow you can search the world.";
-    }
+    updateSearchBarPlaceholder()
     
     let searchBarPosition = searchBarField.getBoundingClientRect();
     let searchBarIcon = document.getElementById("searchBarIcon")

@@ -292,7 +292,252 @@ body {
 input:active,input:focus{
     outline: none;
 }
-/* font-weight:
-   400 	Regular
-   500 	Medium
-   600 	Semi Bold */
+
+#weatherInfoContainer{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    background: linear-gradient(180deg, color-mix(in srgb,var(--primaryColor),transparent 25%) 0%, rgba(0, 0, 0, 0) 25%);
+    background-color: rgba(0,0,0,0.75);
+}
+
+#temperatureColumn{
+    position: relative;
+    height: 140px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 30px;
+    margin-top: 50px;
+    gap: 30px;
+}
+
+.temperatureColumnDiv{
+    position: relative;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#temperatureColumnDivLeft{
+    align-items: center;
+}
+
+#temperatureColumnDivRight{
+    align-items: flex-start;
+}
+
+#IconAndRainAmount{
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+#weatherIcon{
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 60px;
+    color: white;
+}
+
+#amountOfRain{
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    transform: translateX(-50%) translateY(-80%);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--primaryColor);
+    text-shadow: revert;
+}
+
+#descriptionAndLocation{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 15px;
+}
+
+#weatherDescription{
+    font-size: 32px;
+    font-weight: 500;
+}
+
+#weatherLocation{
+    font-size: 24px;
+    font-weight: 500;
+}
+
+#minMaxTemp{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.minMaxTempText{
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#tempAndThermometer{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: -50px;
+}
+
+#actualFeelsLikeTemp{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#actualTemp{
+    font-size: 32px;
+    font-weight: 500;
+}
+
+#feelsLikeTemp{
+    font-size: 10px;
+    font-weight: 500;
+}
+
+#thermometerIcon{
+    width: 60px;
+    height: 60px;
+}
+
+.simpleWeatherColumn{
+    position: relative;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.weatherColumnDiv{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+}
+
+.weatherIcon{
+    width: 60px;
+    height: 60px;
+}
+
+.weatherText{
+    font-size: 24px;
+    font-weight: 500;
+}
+
+#forecastColumn{
+    position: relative;
+    width: 540px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+#forecastText{
+    font-size: 32px;
+    font-weight: 500;
+}
+
+#forecastDays{
+    position: relative;
+    width: 540px;
+    height: 90px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.forecastDay{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.forecastDayName{
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.forecastDayIcon{
+    font-size: 50px;
+    color: white;
+}
+
+.forecastDayDescription{
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#dayCycleColumn{
+    position: relative;
+    height: 130px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 50px;
+    margin-right: 30px;
+}
+
+#dayCycleText{
+    font-size: 32px;
+    font-weight: 500;
+}
+
+#dayCycleImage{
+    position: relative;
+    width: 180px;
+    height: 90.5px;
+}
+
+#dayCycleArch{
+    position: absolute;
+    left: 15px;
+    top: 15px;
+}
+
+#dayCycleIcon{
+    position: absolute;
+}

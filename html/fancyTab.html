@@ -20,13 +20,17 @@
     <div id="dashboard">
         <div id="time" class="text">12:42</div>
         <div id="day" class="text">MONDAY</div>
-    </div>
-    <div id="searchBar">
-        <input id="searchBarField" type="search" placeholder="Good Morning, Luca. Ready to search the world?">
-        <button id="searchBarButton" onclick="searchBarOnClick()">
-            <img id="searchBarIcon" alt="Icon of the search bar" src="../images/searchBarIcon.svg"/>
-        </button>
-        <p id="date" class="text">01.03.2024</p>
+        <div id="shortcuts">
+            <div id="upperShortcuts">
+                <img id="twitchShortcut" alt="Link to Twitch" src="../images/twitchShortcut.svg">
+                <img id="overleafShortcut" alt="Link to Overleaf" src="../images/overleafShortcut.svg">
+            </div>
+            <div id="lowerShortcuts">
+                <img id="youtubeShortcut" alt="Link to YouTube" src="../images/youtubeShortcut.svg">
+                <img id="githubShortcut" alt="Link to GitHub" src="../images/githubShortcut.svg">
+                <img id="gitlabShortcut" alt="Link to GitLab" src="../images/gitlabShortcut.svg">
+            </div>
+        </div>
         <div id="settings" style="visibility: hidden;">
             <div id="userName" class="settingsContainer">
                 <label id="userNameText" for="userNameInput" class="text settingsTexts">User Name:</label>
@@ -81,27 +85,202 @@
                 </div>
             </div>
         </div>
+        <p id="date" class="text">01.03.2024</p>
+        <div id="searchBar">
+            <input id="searchBarField" type="search" placeholder="Good Morning, Fellow Human. Ready to search the world?" autocomplete="off">
+            <button id="searchBarButton">
+                <img id="searchBarIcon" alt="Icon of the search bar" src="../images/searchBarIcon.svg"/>
+            </button>
+            <img id="settingsIcon" alt="Icon of settings" src="../images/settingsIcon.svg"/>
+        </div>
     </div>
-    <button id="arrow" onclick="showWeatherInfo()">
-        <img alt="arrow pointing upwards" src="../images/arrow_up.svg"/>
-    </button>
-    <div id="weatherInfo"> 
-        <span id="weatherIcon" class="material-symbols-outlined">
-            thunderstorm
-        </span>
-    </div>
-    <img id="dayCycleIcon" alt="icon that shows the time of day" src="../images/dayCycleIcon.svg"/>
-        <div id="shortcuts">
-            <div id="upperShortcuts">
-                <img id="twitchShortcut" alt="Link to Twitch" src="../images/twitchShortcut.svg">
-                <img id="overleafShortcut" alt="Link to Overleaf" src="../images/overleafShortcut.svg">
+    <div id="weatherInfoContainer">
+        <div id="temperatureColumn">
+            <div id="temperatureColumnDivLeft" class="temperatureColumnDiv">
+                <div id="IconAndRainAmount">
+                    <span id="weatherIcon" class="material-symbols-outlined">
+                        cloudy
+                    </span>
+                    <div id="amountOfRain" class="text">
+                        12mm
+                    </div>
+                </div>
+                <div id="minMaxTemp">
+                    <div id="minTemp" class="text minMaxTempText">
+                        MIN 18°C
+                    </div>
+                    <div id="maxTemp" class="text minMaxTempText">
+                        MAX 26°C
+                    </div>
+                </div>
             </div>
-            <div id="lowerShortcuts">
-                <img id="youtubeShortcut" alt="Link to YouTube" src="../images/youtubeShortcut.svg">
-                <img id="githubShortcut" alt="Link to GitHub" src="../images/githubShortcut.svg">
-                <img id="gitlabShortcut" alt="Link to GitLab" src="../images/gitlabShortcut.svg">
+            <div id="temperatureColumnDivRight" class="temperatureColumnDiv">
+                <div id="descriptionAndLocation">
+                    <div id="weatherDescription" class="text">
+                        LIGHT RAIN
+                    </div>
+                    <div id="weatherLocation" class="text">
+                        Recklinghausen
+                    </div>
+                </div>
+                <div id="tempAndThermometer">
+                    <div id="actualFeelsLikeTemp">
+                        <div id="actualTemp" class="text">
+                            24°C
+                        </div>
+                        <div id="feelsLikeTemp" class="text">
+                            FEELS LIKE 22°C
+                        </div>
+                    </div>
+                    <img id="thermometerIcon" alt="Icon of a thermometer" src="../images/thermometerIcon.svg">
+                </div>
             </div>
         </div>
+        <img alt="seperating line" src="../images/weatherColumnSeperator.svg"/>
+        <div class="simpleWeatherColumn">
+            <div class="weatherColumnDiv">
+                <svg id="windDirectionIcon" width="60" height="60" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <mask id="path-1-inside-1_30_26" fill="white">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M42.9254 15.1984H27.084V35H32.5295C32.5295 35 32.5295 35 32.5295 35C32.5295 33.633 33.6377 32.5248 35.0047 32.5248C36.3717 32.5248 37.4799 33.633 37.4799 35C37.4799 35 37.4799 35 37.4799 35H42.9254V15.1984Z"/>
+                    </mask>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M42.9254 15.1984H27.084V35H32.5295C32.5295 35 32.5295 35 32.5295 35C32.5295 33.633 33.6377 32.5248 35.0047 32.5248C36.3717 32.5248 37.4799 33.633 37.4799 35C37.4799 35 37.4799 35 37.4799 35H42.9254V15.1984Z" fill="url(#paint0_linear_30_26)"/>
+                    <path d="M27.084 15.1984V14.7984H26.684V15.1984H27.084ZM42.9254 15.1984H43.3254V14.7984H42.9254V15.1984ZM27.084 35H26.684V35.4H27.084V35ZM32.5295 35V35.4H32.9295V35H32.5295ZM37.4799 35H37.0799V35.4H37.4799V35ZM42.9254 35V35.4H43.3254V35H42.9254ZM27.084 15.5984H42.9254V14.7984H27.084V15.5984ZM27.484 35V15.1984H26.684V35H27.484ZM32.5295 34.6H27.084V35.4H32.5295V34.6ZM32.9295 35C32.9295 35 32.9295 35 32.9295 35V35C32.9295 35 32.9295 35 32.9295 35V35V35V35V35C32.9295 35 32.9295 35 32.9295 35V35C32.9295 35 32.9295 35 32.9295 35H32.1295C32.1295 35 32.1295 35 32.1295 35V35C32.1295 35 32.1295 35 32.1295 35V35V35V35V35C32.1295 35 32.1295 35 32.1295 35V35C32.1295 35 32.1295 35 32.1295 35H32.9295ZM32.9295 35C32.9295 33.8539 33.8586 32.9248 35.0047 32.9248V32.1248C33.4168 32.1248 32.1295 33.4121 32.1295 35H32.9295ZM35.0047 32.9248C36.1508 32.9248 37.0799 33.8539 37.0799 35H37.8799C37.8799 33.4121 36.5926 32.1248 35.0047 32.1248V32.9248ZM37.0799 35C37.0799 35 37.0799 35 37.0799 35V35C37.0799 35 37.0799 35 37.0799 35V35V35V35V35C37.0799 35 37.0799 35 37.0799 35V35C37.0799 35 37.0799 35 37.0799 35H37.8799C37.8799 35 37.8799 35 37.8799 35V35C37.8799 35 37.8799 35 37.8799 35V35V35V35V35C37.8799 35 37.8799 35 37.8799 35V35C37.8799 35 37.8799 35 37.8799 35H37.0799ZM42.9254 34.6H37.4799V35.4H42.9254V34.6ZM42.5254 15.1984V35H43.3254V15.1984H42.5254Z" fill="white" mask="url(#path-1-inside-1_30_26)"/>
+                    <path d="M34.5348 54.4235L35.0047 55.7157L35.4746 54.4235L42.4755 35.1709L42.5377 35L42.4755 34.8291L35.4746 15.5765L35.0047 14.2843L34.5348 15.5765L27.5339 34.8291L27.4717 35L27.5339 35.1709L34.5348 54.4235ZM36.4014 36.3967C35.9945 36.8035 35.5365 36.9941 35.0047 36.9941C34.4729 36.9941 34.0149 36.8035 33.608 36.3967C33.3352 36.1239 33.168 35.846 33.0876 35.5315L33.528 35.5243L35.0129 35.5L36.9222 35.4687C36.8402 35.8152 36.6692 36.1288 36.4014 36.3967ZM52.1535 52.1488C49.7783 54.5239 47.1005 56.3009 44.1183 57.4853C41.1262 58.6735 38.0893 59.2658 35.0047 59.2658C31.9201 59.2658 28.8832 58.6735 25.8911 57.4853C22.9089 56.3009 20.231 54.5239 17.8559 52.1488C15.4808 49.7737 13.7038 47.0958 12.5194 44.1136C11.3312 41.1215 10.7389 38.0846 10.7389 35C10.7389 31.9154 11.3312 28.8785 12.5194 25.8864C13.7038 22.9042 15.4808 20.2263 17.8559 17.8512C20.231 15.4761 22.9089 13.6991 25.8911 12.5147C28.8832 11.3265 31.9201 10.7342 35.0047 10.7342C38.0893 10.7342 41.1262 11.3265 44.1183 12.5147C47.1005 13.6991 49.7783 15.4761 52.1535 17.8512C54.5286 20.2263 56.3056 22.9042 57.49 25.8864C58.6782 28.8785 59.2705 31.9154 59.2705 35C59.2705 38.0846 58.6782 41.1215 57.49 44.1136C56.3056 47.0958 54.5286 49.7737 52.1535 52.1488Z" fill="white" stroke="black"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M32.5097 35L37.4799 35C37.4799 36.3944 36.3673 37.5247 34.9948 37.5247C33.6223 37.5247 32.5097 36.3944 32.5097 35Z" fill="white"/>
+                    <defs>
+                        <linearGradient id="paint0_linear_30_26" x1="35.0047" y1="20.1984" x2="35.0047" y2="35" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="1" stop-color= "#1A011E"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <p id="windDirectionText" class="text weatherText">
+                    156°
+                </p>
+            </div>
+            <div class="weatherColumnDiv">
+                <img class="weatherIcon" alt="Icon for wind speed" src="../images/windSpeedIcon.svg"/>
+                <p id="windSpeedText" class="text weatherText">
+                    10.6 m/s
+                </p>
+            </div>
+        </div>
+        <img alt="seperating line" src="../images/weatherColumnSeperator.svg"/>
+        <div class="simpleWeatherColumn">
+            <div class="weatherColumnDiv">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="12" y="35" width="18" height="15" fill="url(#paint0_linear_30_37)"/>
+                    <path d="M21.7396 22.9418L21.4286 22.6949L21.1176 22.9418C16.3067 26.7626 12.6899 30.3296 10.2872 33.6441C7.886 36.9564 6.64288 40.0789 6.64288 43C6.64288 47.0204 8.05674 50.4023 10.8817 53.1109C13.7059 55.8189 17.2337 57.1667 21.4286 57.1667C25.6235 57.1667 29.1513 55.8189 31.9755 53.1109C34.8005 50.4023 36.2143 47.0204 36.2143 43C36.2143 40.0789 34.9712 36.9564 32.57 33.6441C30.1673 30.3296 26.5505 26.7626 21.7396 22.9418ZM27.449 48.9053C27.0252 49.3009 26.5165 49.5 25.8929 49.5C25.2693 49.5 24.7605 49.3009 24.3367 48.9053C23.9142 48.511 23.7143 48.0519 23.7143 47.5C23.7143 46.9482 23.9142 46.489 24.3367 46.0947C24.7605 45.6992 25.2693 45.5 25.8929 45.5C26.5165 45.5 27.0252 45.6992 27.449 46.0947C27.8715 46.489 28.0715 46.9482 28.0715 47.5C28.0715 48.0519 27.8715 48.511 27.449 48.9053ZM25.9822 37.434L27.7494 39.0834L16.875 49.2327L15.1078 47.5834L25.9822 37.434ZM18.5205 40.572C18.0967 40.9676 17.5879 41.1667 16.9643 41.1667C16.3407 41.1667 15.832 40.9676 15.4081 40.572C14.9857 40.1777 14.7857 39.7185 14.7857 39.1667C14.7857 38.6149 14.9857 38.1557 15.4081 37.7614C15.832 37.3658 16.3407 37.1667 16.9643 37.1667C17.5879 37.1667 18.0967 37.3658 18.5205 37.7614C18.943 38.1557 19.1429 38.6149 19.1429 39.1667C19.1429 39.7185 18.943 40.1777 18.5205 40.572Z" fill="white" stroke="black"/>
+                    <rect x="39" y="17" width="13" height="10" fill="url(#paint1_linear_30_37)"/>
+                    <path d="M46.0252 8.49739L45.7142 8.25043L45.4033 8.49739C42.1896 11.0497 39.7657 13.4384 38.1517 15.6649C36.5392 17.8892 35.6904 20.0049 35.6904 22C35.6904 24.7242 36.6504 27.0227 38.5676 28.8609C40.4841 30.6985 42.8784 31.6112 45.7142 31.6112C48.55 31.6112 50.9444 30.6985 52.8609 28.8609C54.7781 27.0227 55.738 24.7242 55.738 22C55.738 20.0049 54.8893 17.8892 53.2768 15.6649C51.6628 13.4384 49.2389 11.0497 46.0252 8.49739ZM49.6142 25.8151C49.3639 26.0486 49.066 26.1667 48.6904 26.1667C48.3148 26.1667 48.0169 26.0486 47.7667 25.8151C47.5178 25.5828 47.4047 25.3204 47.4047 25C47.4047 24.6797 47.5178 24.4173 47.7667 24.185C48.0169 23.9515 48.3148 23.8334 48.6904 23.8334C49.066 23.8334 49.3639 23.9515 49.6141 24.185C49.863 24.4173 49.9761 24.6797 49.9761 25C49.9761 25.3204 49.863 25.5828 49.6142 25.8151ZM48.75 18.5173L49.6838 19.3889L42.6785 25.9272L41.7447 25.0556L48.75 18.5173ZM43.6618 20.2595C43.4116 20.493 43.1136 20.6112 42.738 20.6112C42.3625 20.6112 42.0645 20.493 41.8143 20.2595C41.5654 20.0272 41.4523 19.7648 41.4523 19.4445C41.4523 19.1241 41.5654 18.8617 41.8143 18.6295C42.0645 18.3959 42.3625 18.2778 42.738 18.2778C43.1136 18.2778 43.4116 18.3959 43.6618 18.6295C43.9106 18.8617 44.0238 19.1241 44.0238 19.4445C44.0238 19.7648 43.9106 20.0272 43.6618 20.2595Z" fill="white" stroke="black"/>
+                    <rect x="20" y="8" width="9" height="7" fill="url(#paint2_linear_30_37)"/>
+                    <path d="M25.3109 1.27513L25 1.02817L24.689 1.27513C22.274 3.19318 20.4466 4.99277 19.2269 6.67529C18.0087 8.35565 17.3571 9.96778 17.3571 11.5C17.3571 13.576 18.0902 15.3328 19.5535 16.7359C21.0161 18.1383 22.8437 18.8333 25 18.8333C27.1562 18.8333 28.9838 18.1383 30.4465 16.7359C31.9098 15.3328 32.6428 13.576 32.6428 11.5C32.6428 9.96778 31.9912 8.35565 30.7731 6.67529C29.5534 4.99277 27.726 3.19318 25.3109 1.27513ZM27.8396 14.2699C27.6762 14.4224 27.4837 14.5 27.2321 14.5C26.9805 14.5 26.788 14.4224 26.6246 14.2699C26.4625 14.1186 26.3928 13.9546 26.3928 13.75C26.3928 13.5454 26.4625 13.3814 26.6246 13.2301C26.788 13.0776 26.9805 13 27.2321 13C27.4837 13 27.6762 13.0776 27.8396 13.2301C28.0017 13.3814 28.0714 13.5454 28.0714 13.75C28.0714 13.9546 28.0017 14.1186 27.8396 14.2699ZM27.2768 9.05895L27.794 9.54167L22.7232 14.2744L22.206 13.7917L27.2768 9.05895ZM23.3753 10.1032C23.2119 10.2557 23.0194 10.3333 22.7678 10.3333C22.5163 10.3333 22.3237 10.2557 22.1603 10.1032C21.9983 9.95196 21.9285 9.78796 21.9285 9.58334C21.9285 9.37872 21.9983 9.21472 22.1603 9.06345C22.3237 8.91094 22.5163 8.83334 22.7678 8.83334C23.0194 8.83334 23.2119 8.91094 23.3753 9.06345C23.5374 9.21472 23.6071 9.37872 23.6071 9.58334C23.6071 9.78796 23.5374 9.95196 23.3753 10.1032Z" fill="white" stroke="black"/>
+                    <defs>
+                        <linearGradient id="paint0_linear_30_37" x1="21" y1="35" x2="21" y2="50" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="1" stop-color="#1A011E"/>
+                        </linearGradient>
+                        <linearGradient id="paint1_linear_30_37" x1="45.5" y1="17" x2="45.5" y2="27" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="1" stop-color="#1A011E"/>
+                        </linearGradient>
+                        <linearGradient id="paint2_linear_30_37" x1="24.5" y1="8" x2="24.5" y2="15" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="1" stop-color="#1A011E"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <p id="humidityText" class="text weatherText">
+                    75%
+                </p>
+            </div>
+            <div class="weatherColumnDiv">
+                <svg width="60" height="60" viewBox="0 0 60 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.12455 20.0474L1.05228 20.2308L1.12455 20.4141C3.46852 26.3608 7.24994 31.1105 12.4626 34.6508C17.6743 38.1904 23.456 39.9615 29.7948 39.9615C36.1336 39.9615 41.9154 38.1904 47.127 34.6508C52.3398 31.1105 56.1212 26.3608 58.4651 20.4141L58.5374 20.2308L58.4651 20.0474C56.1212 14.1007 52.3398 9.35104 47.127 5.81074C41.9154 2.27116 36.1336 0.5 29.7948 0.5C23.456 0.5 17.6743 2.27116 12.4626 5.81074C7.24994 9.35104 3.46852 14.1007 1.12455 20.0474ZM37.6144 28.0503C35.4656 30.1991 32.8689 31.2692 29.7948 31.2692C26.7208 31.2692 24.1241 30.1991 21.9753 28.0503C19.8266 25.9015 18.7564 23.3048 18.7564 20.2308C18.7564 17.1567 19.8266 14.56 21.9753 12.4112C24.1241 10.2625 26.7208 9.19231 29.7948 9.19231C32.8689 9.19231 35.4656 10.2625 37.6144 12.4112C39.7631 14.56 40.8333 17.1567 40.8333 20.2308C40.8333 23.3048 39.7631 25.9015 37.6144 28.0503ZM24.5374 25.4882C25.9784 26.9292 27.7407 27.6538 29.7948 27.6538C31.849 27.6538 33.6113 26.9292 35.0522 25.4882C36.4932 24.0472 37.2179 22.2849 37.2179 20.2308C37.2179 18.1766 36.4932 16.4144 35.0522 14.9734C33.6113 13.5324 31.849 12.8077 29.7948 12.8077C27.7407 12.8077 25.9784 13.5324 24.5374 14.9734C23.0965 16.4144 22.3718 18.1766 22.3718 20.2308C22.3718 22.2849 23.0965 24.0472 24.5374 25.4882Z" fill="white" stroke="black"/>
+                    <path d="M5.07185 19.6231L5.36613 19.5573L5.44521 19.2663C5.80517 17.9416 6.51967 16.8783 7.59625 16.0601C8.67395 15.241 9.88838 14.8333 11.2564 14.8333C12.9442 14.8333 14.3587 15.4155 15.5299 16.5866C16.7011 17.7578 17.2832 19.1723 17.2832 20.8601V21.3055L17.7256 21.3568C18.6768 21.4671 19.4531 21.8713 20.0775 22.5781C20.7035 23.2866 21.0128 24.1051 21.0128 25.0559C21.0128 26.0903 20.6565 26.9534 19.9355 27.6744C19.2145 28.3954 18.3514 28.7517 17.317 28.7517H6.12821C4.84328 28.7517 3.76082 28.3124 2.85287 27.4255C1.94786 26.5416 1.5 25.4744 1.5 24.1935C1.5 23.0902 1.82958 22.1178 2.49164 21.2585C3.14981 20.4043 4.00346 19.8621 5.07185 19.6231Z" fill="url(#paint0_linear_30_51)" stroke="black"/>
+                    <path d="M31.8504 28.6791L32.1447 28.6133L32.2238 28.3223C32.4866 27.355 33.0068 26.5811 33.792 25.9843C34.5784 25.3867 35.4626 25.0898 36.4615 25.0898C37.6948 25.0898 38.7237 25.5136 39.5783 26.3681C40.4328 27.2227 40.8566 28.2516 40.8566 29.4849V29.9302L41.2991 29.9815C41.9822 30.0607 42.536 30.3494 42.9837 30.8561C43.4329 31.3646 43.6538 31.9489 43.6538 32.6317C43.6538 33.3747 43.3995 33.9901 42.8825 34.5072C42.3654 35.0242 41.75 35.2786 41.007 35.2786H32.6154C31.684 35.2786 30.9036 34.9616 30.2462 34.3195C29.5918 33.6803 29.2692 32.9122 29.2692 31.9849C29.2692 31.1846 29.5075 30.4822 29.987 29.86C30.4625 29.2427 31.0773 28.852 31.8504 28.6791Z" fill="url(#paint1_linear_30_51)" stroke="black"/>
+                    <path d="M32.8061 7.49027L33.1004 7.42445L33.1795 7.13345C33.6366 5.45135 34.5453 4.09857 35.9133 3.05892C37.2823 2.01842 38.827 1.5 40.5641 1.5C42.7065 1.5 44.5066 2.24047 45.9944 3.72826C47.4821 5.21605 48.2226 7.01614 48.2226 9.15851V9.60389L48.665 9.65518C49.8843 9.79655 50.8829 10.3164 51.6842 11.2232C52.4869 12.1318 52.8846 13.1843 52.8846 14.4033C52.8846 15.729 52.4263 16.8398 51.5013 17.7647C50.5764 18.6897 49.4656 19.148 48.1399 19.148H34.1538C32.5154 19.148 31.1309 18.5863 29.9723 17.4547C28.8167 16.326 28.2436 14.9596 28.2436 13.3252C28.2436 11.9189 28.6645 10.6765 29.5091 9.58023C30.3499 8.48903 31.4425 7.7953 32.8061 7.49027Z" fill="url(#paint2_linear_30_51)" stroke="black"/>
+                    <defs>
+                        <linearGradient id="paint0_linear_30_51" x1="11.2564" y1="14.3333" x2="11.2564" y2="29.2517" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="1" stop-color="#1A011E"/>
+                        </linearGradient>
+                        <linearGradient id="paint1_linear_30_51" x1="36.4615" y1="24.5898" x2="36.4615" y2="35.7786" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="1" stop-color="#1A011E"/>
+                        </linearGradient>
+                        <linearGradient id="paint2_linear_30_51" x1="40.5641" y1="1" x2="40.5641" y2="19.648" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="1" stop-color="#1A011E"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <p id="visibilityText" class="text weatherText">
+                    5.34 km
+                </p>
+            </div>
+        </div>
+        <img alt="seperating line" src="../images/weatherColumnSeperator.svg"/>
+        <div id="forecastColumn">
+            <p id="forecastText" class="text">5-DAY FORECAST</p>
+            <div id="forecastDays">
+                <div class="forecastDay">
+                    <p class="text forecastDayName">WED</p>
+                    <span class="material-symbols-outlined forecastDayIcon">
+                        rainy
+                    </span>
+                    <p class="text forecastDayDescription">RAINY</p>
+                </div>
+                <div class="forecastDay">
+                    <p class="text forecastDayName">THU</p>
+                    <span class="material-symbols-outlined forecastDayIcon">
+                        rainy
+                    </span>
+                    <p class="text forecastDayDescription">LIGHT RAIN</p>
+                </div>
+                <div class="forecastDay">
+                    <p class="text forecastDayName">FRI</p>
+                    <span class="material-symbols-outlined forecastDayIcon">
+                        cloudy
+                    </span>
+                    <p class="text forecastDayDescription">CLOUDY</p>
+                </div>
+                <div class="forecastDay">
+                    <p class="text forecastDayName">SAT</p>
+                    <span class="material-symbols-outlined forecastDayIcon">
+                        clear_day
+                    </span>
+                    <p class="text forecastDayDescription">CLEAR DAY</p>
+                </div>
+                <div class="forecastDay">
+                    <p class="text forecastDayName">SUN</p>
+                    <span class="material-symbols-outlined forecastDayIcon">
+                        clear_day
+                    </span>
+                    <p class="text forecastDayDescription">CLEAR DAY</p>
+                </div>
+            </div>
+        </div>
+        <img alt="seperating line" src="../images/weatherColumnSeperator.svg"/>
+        <div id="dayCycleColumn">
+            <p id="dayCycleText" class="text">DAY CYCLE</p>
+            <div id="dayCycleImage">
+                <svg id="dayCycleArch" width="150" height="76" viewBox="0 0 150 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_145_9)">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M133.186 119.091C119.855 136.656 98.7521 148 75 148C51.2479 148 30.1453 136.656 16.8143 119.091H14.3223C27.9578 137.824 50.0569 150 75 150C99.9431 150 122.042 137.824 135.678 119.091H133.186ZM2.00139 75.4546C2.00046 75.3031 2 75.1516 2 75C2 34.6832 34.6832 2 75 2C115.317 2 148 34.6832 148 75C148 75.1516 148 75.3031 147.999 75.4546H149.999C150 75.3031 150 75.1516 150 75C150 33.5786 116.421 0 75 0C33.5786 0 0 33.5786 0 75C0 75.1516 0.000449943 75.3031 0.00134857 75.4546H2.00139Z" fill="#D9D9D9"/>
+                        <ellipse cx="74.5" cy="71" rx="16.5" ry="4.5" fill="#D9D9D9" fill-opacity="0.5"/>
+                        <path d="M72.5 66L70.4375 71L68.125 70.0625L69.9375 65.6562C67.7292 65.0729 65.9375 63.8854 64.5625 62.0938C63.1875 60.3021 62.5 58.2708 62.5 56V51C62.5 49.625 62.9896 48.4479 63.9688 47.4688C64.9479 46.4896 66.125 46 67.5 46C67.9583 46 68.3958 46.0781 68.8125 46.2344C69.2292 46.3906 69.6458 46.5521 70.0625 46.7188L77.5 49.75L72.5 51.625V53.5L82.3125 59.75H72.5C71.8125 59.75 71.224 59.5052 70.7344 59.0156C70.2448 58.526 70 57.9375 70 57.25H67.5C67.5 58.625 67.9896 59.8021 68.9688 60.7812C69.9479 61.7604 71.125 62.25 72.5 62.25H86.25L87.5 68.5H85L83.75 66H77.5V71H75V66H72.5ZM67.5 49.75C67.1458 49.75 66.849 49.8698 66.6094 50.1094C66.3698 50.349 66.25 50.6458 66.25 51C66.25 51.3542 66.3698 51.651 66.6094 51.8906C66.849 52.1302 67.1458 52.25 67.5 52.25C67.8542 52.25 68.151 52.1302 68.3906 51.8906C68.6302 51.651 68.75 51.3542 68.75 51C68.75 50.6458 68.6302 50.349 68.3906 50.1094C68.151 49.8698 67.8542 49.75 67.5 49.75Z" fill="var(--secondaryColor)"/>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_145_9">
+                            <rect width="150" height="75.5" fill="white"/>
+                        </clipPath>
+                    </defs>
+                </svg>
+                <img id="dayCycleIcon" alt="icon that shows the time of day" src="../images/dayCycleIcon.svg"/>
+            </div>
+        </div>
+    </div>
     <script src="../scripts/fancyTab.js"></script>
 </body>
 </html>
