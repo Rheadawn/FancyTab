@@ -1,0 +1,10 @@
+{
+  "imageAPI": {
+    "applicationID": "",
+    "accessKey": "",
+    "secretKey": ""
+  },
+  "weatherAPI": {
+    "accessKey": ""
+  }
+}
