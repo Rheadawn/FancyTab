@@ -387,7 +387,6 @@ function updateLanguage(language, sync){
     
     updateSearchBarPlaceholder()
     updateSettingsLanguage(selectedLanguage)
-    updateAccessabilityLanguage(selectedLanguage)
     getWeatherInfo()
 }
 
