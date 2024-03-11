@@ -32,7 +32,6 @@ body::after {
     line-height: 0.75;
 }
 
-#image{
 #powerButton{
     position: absolute;
     z-index: 1;
@@ -41,6 +40,17 @@ body::after {
     width: 50px;
     height: 50px;
 }
+
+#colorButton{
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+}
+
+#backgroundImage{
     background-size: cover; /* Lets image cover whole screen */
     background-position: center;
     background-repeat: no-repeat;

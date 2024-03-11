@@ -7,9 +7,19 @@ function loadWindow(){
     updateClock()
     updateSearchBar()
     getWeatherInfo()
+    setSavedSettings()
+}
+
 //--EVENT_LISTENERS---
+let colorOn = true
 function setEventListeners(){
     document.getElementById("powerButton").addEventListener("click", (event) => {window.close()})
+    document.getElementById("colorButton").addEventListener("click", (event) => {
+        colorOn = !colorOn
+        chrome.storage.sync.set({ "colorOn": colorOn }).then(() => {});
+        document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
+        updateImageColor()
+    })
     
     document.getElementById("twitchShortcut").addEventListener("click", (event) => {window.open(`https://twitch.tv`, window.name)})
     document.getElementById("overleafShortcut").addEventListener("click", (event) => {window.open(`https://overleaf.com`, window.name)})
@@ -32,9 +42,17 @@ async function getRandomImage(){
     let credentials = await getCredentials()
     let imageResponse = await (await fetch(`https://api.unsplash.com/photos/random?client_id=${credentials.imageAPI.accessKey}&orientation=landscape&query=wallpaper,nature,animals`)).json()
     let imageURL = imageResponse.urls.full
-    let image = document.getElementById("image")
+    let image = document.getElementById("backgroundImage")
     image.style.backgroundImage = `url("${imageURL}")`
-    image.style.filter = `grayscale(100%)`
+}
+
+function updateImageColor(){
+    let image = document.getElementById("backgroundImage")
+    if(colorOn){
+        image.style.filter = `grayscale(0%)`
+    }else{
+        image.style.filter = `grayscale(100%)`
+    }
 }
 
 
@@ -168,4 +186,14 @@ function searchBarOnClick(){
     let query = searchBarField.value
     window.open(`https://google.com/search?q=${query}`, window.name)
     searchBar.value = ""
+function setSavedSettings(){
+    chrome.storage.sync.get(["colorOn"]).then((color) => {
+        if(color.colorOn !== undefined){
+            document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
+        }else{
+            document.getElementById("colorButton").src = "../images/colorOn.svg"
+        }
+        updateImageColor()
+    });
+}
 }
