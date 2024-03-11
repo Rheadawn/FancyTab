@@ -82,6 +82,51 @@ body::after {
 #day{
     font-size: 40px;
     font-weight: 500;
+#shortcuts{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -60px;
+}
+
+#upperShortcuts{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 500px;
+}
+
+#upperShortcuts img{
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+    transition: 200ms ease-in-out scale;
+}
+
+#upperShortcuts img:hover{
+    scale: 1.1;
+}
+
+#lowerShortcuts{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 350px;
+}
+
+#lowerShortcuts img{
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+    transition: 200ms ease-in-out scale;
+}
+
+#lowerShortcuts img:hover{
+    scale: 1.1;
+}
 }
 
 #searchBar{

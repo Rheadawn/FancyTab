@@ -3,9 +3,20 @@ window.onload = loadWindow
 //---LOAD_WINDOW---
 function loadWindow(){
     getRandomImage()
+    setEventListeners()
     updateClock()
     updateSearchBar()
     getWeatherInfo()
+//--EVENT_LISTENERS---
+function setEventListeners(){
+    
+    document.getElementById("twitchShortcut").addEventListener("click", (event) => {window.open(`https://twitch.tv`, window.name)})
+    document.getElementById("overleafShortcut").addEventListener("click", (event) => {window.open(`https://overleaf.com`, window.name)})
+    document.getElementById("youtubeShortcut").addEventListener("click", (event) => {window.open(`https://youtube.com`, window.name)})
+    document.getElementById("githubShortcut").addEventListener("click", (event) => {window.open(`https://github.com`, window.name)})
+    document.getElementById("gitlabShortcut").addEventListener("click", (event) => {window.open(`https://gitlab.com`, window.name)})
+    
+    chrome.storage.onChanged.addListener((changes) => {setSavedSettings()})
 }
 
 //---CREDENTIALS---
