@@ -295,6 +295,7 @@ let settingsActive = false;
 function setSavedSettings(){
     chrome.storage.sync.get(["colorOn"]).then((color) => {
         if(color.colorOn !== undefined){
+            colorOn = color.colorOn
             document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
         }else{
             document.getElementById("colorButton").src = "../images/colorOn.svg"
