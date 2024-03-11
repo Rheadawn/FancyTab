@@ -27,6 +27,60 @@
             <img id="searchBarIcon" alt="Icon of the search bar" src="../images/searchBarIcon.svg"/>
         </button>
         <p id="date" class="text">01.03.2024</p>
+        <div id="settings" style="visibility: hidden;">
+            <div id="userName" class="settingsContainer">
+                <label id="userNameText" for="userNameInput" class="text settingsTexts">User Name:</label>
+                <input id="userNameInput" name="userNameInput" type="text" placeholder="Fellow Human" value="Fellow Human"/>
+            </div>
+            <div id="language" class="settingsContainer">
+                <p id="languageText" class="text settingsTexts">Language:</p>
+                <div class="settingsButtons">
+                    <button id="languageButtonEnglish" state="active">
+                        English
+                    </button>
+                    <button id="languageButtonGerman">
+                        German
+                    </button>
+                </div>
+            </div>
+            <div id="measureUnit" class="settingsContainer">
+                <p id="measureUnitText" class="text settingsTexts">Measure Unit:</p>
+                <div class="settingsButtons">
+                    <button id="measureUnitMetric" state="active">
+                        Metric
+                    </button>
+                    <button id="measureUnitImperial">
+                        Imperial
+                    </button>
+                </div>
+            </div>
+            <div id="colorScheme" class="settingsContainer">
+                <p id="colorSchemeText" class="text settingsTexts">Color Scheme:</p>
+                <div class="settingsButtons">
+                    <button id="colorSchemeBlue" style="background: #033D6B;">
+                        Blue
+                    </button>
+                    <button id="colorSchemeViolet" style="background: #370140;" state="active">
+                        Violet
+                    </button>
+                    <button id="colorSchemeGreen" style="background: #345502;">
+                        Green
+                    </button>
+                    <button id="colorSchemeRed" style="background: #450113;">
+                        Red
+                    </button>
+                </div>
+            </div>
+            <div id="searchEngine" class="settingsContainer">
+                <p id="searchEngineText" class="text settingsTexts">Search Engine:</p>
+                <div class="settingsSearchEngines">
+                    <img id="google" alt="Icon of Google" src="../images/googleIcon.svg" state="active">
+                    <img id="ecosia" alt="Icon of Ecosia" src="../images/ecosiaIcon.svg">
+                    <img id="duckDuckGo" alt="Icon of DuckDuckGo" src="../images/duckDuckGoIcon.svg">
+                    <img id="bing" alt="Icon of Bing" src="../images/bingIcon.svg">
+                </div>
+            </div>
+        </div>
     </div>
     <button id="arrow" onclick="showWeatherInfo()">
         <img alt="arrow pointing upwards" src="../images/arrow_up.svg"/>

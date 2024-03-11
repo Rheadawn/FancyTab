@@ -1,3 +1,8 @@
+:root{
+    --primaryColor: #370140;
+    --secondaryColor: #720484;
+}
+
 body {
     display: flex;
     flex-direction: column; /* Items stacked vertically */
@@ -130,6 +135,109 @@ body {
     font-weight: 500;
     margin-top: 26px;
 }
+
+#settings{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 60px;
+    border-radius: 30px;
+    width: 440px;
+    border: 4px solid rgba(0,0,0,0.75);
+    background: linear-gradient(180deg, color-mix(in srgb,var(--primaryColor),transparent 25%) 0%, rgba(0, 0, 0, 0) 76%);
+    background-color: rgba(0,0,0,0.75);
+    padding: 30px;
+}
+
+.settingsContainer{
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 25px;
+    flex-direction: row;
+    align-items: center;
+    gap: 60px;
+}
+
+.settingsTexts{
+    position: relative;
+    width: 140px;
+    min-width: 140px;
+    font-size: 20px;
+}
+
+.settingsButtons button{
+    width: 100%;
+    height: 25px;
+    border-radius: 30px;
+    border: none;
+    font-family: "Jost", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 0.75;
+    background: rgba(255,255,255,90%);
+    color: rgba(0,0,0,50%);
+}
+
+.settingsButtons{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    width: 100%;
+}
+
+.settingsButtons button[state="active"]{
+    color: black;
+}
+
+#colorScheme .settingsButtons button{
+    color: rgba(255,255,255,50%);
+}
+
+#colorScheme .settingsButtons button[state="active"]{
+    color: white;
+}
+
+#userNameInput{
+    position: relative;
+    width: 240px;
+    height: 25px;
+    font-size: 16px;
+    font-family: "Jost", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 500;
+    text-align: center;
+    line-height: 0.75;
+    border-radius: 30px;
+    border: none;
+    background: rgba(255,255,255,90%);
+}
+
+.settingsSearchEngines{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 6px;
+}
+
+.settingsSearchEngines img{
+    width: 100%;
+    height: 25px;
+    border: none;
+    opacity: 25%;
+    padding-left: 11px;
+    padding-right: 11px;
+}
+
+.settingsSearchEngines img[state="active"]{
+    opacity: 100%;
 }
 
 #searchBar{
@@ -175,6 +283,15 @@ body {
     appearance: none;
 }
 
+#settingsIcon{
+    width: 40px;
+    height: 40px;
+    margin-left: 20px;
+}
+
+input:active,input:focus{
+    outline: none;
+}
 /* font-weight:
    400 	Regular
    500 	Medium

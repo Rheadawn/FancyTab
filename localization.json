@@ -1,0 +1,32 @@
+{
+  "English": {
+    "userNameText": "User Name:",
+    "languageText" : "Language:",
+    "languageButtonEnglish" :  "English",
+    "languageButtonGerman": "German",
+    "measureUnitText" : "Measure Unit:",
+    "measureUnitMetric" : "Metric",
+    "measureUnitImperial" : "Imperial",
+    "colorSchemeText" : "Color Scheme:",
+    "colorSchemeBlue" : "Blue",
+    "colorSchemeViolet" : "Violet",
+    "colorSchemeGreen" : "Green",
+    "colorSchemeRed" : "Red",
+    "searchEngineText" : "Search Engine:"
+  },
+  "German": {
+    "userNameText": "Benutzername:",
+    "languageText" : "Sprache:",
+    "languageButtonEnglish" :  "Englisch",
+    "languageButtonGerman": "Deutsch",
+    "measureUnitText" : "Maßeinheit:",
+    "measureUnitMetric" : "Metrisch",
+    "measureUnitImperial" : "Imperial",
+    "colorSchemeText" : "Farbschema:",
+    "colorSchemeBlue" : "Blau",
+    "colorSchemeViolet" : "Lila",
+    "colorSchemeGreen" : "Grün",
+    "colorSchemeRed" : "Rot",
+    "searchEngineText" : "Search Engine:"
+  }
+}

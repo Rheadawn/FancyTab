@@ -20,6 +20,19 @@ function setEventListeners(){
         document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
         updateImageColor()
     })
+    document.getElementById("settingsIcon").addEventListener("click", (event) => {toggleSettings()})
+    document.getElementById("searchBarButton").addEventListener("click", (event) => {searchBarOnClick()})
+    document.getElementById("searchBarField").addEventListener("keydown", (event) => {if(event.key === "Enter"){searchBarOnClick()}})
+
+    document.getElementById("userNameInput").addEventListener("change", (event) => {updateUserName(false)})
+    let languageButtons = document.querySelectorAll("#language button")
+    languageButtons.forEach((element, index) => {element.addEventListener("click", (event) => {updateLanguage(element.innerText, false)})})
+    let unitMeasureButtons = document.querySelectorAll("#measureUnit button")
+    unitMeasureButtons.forEach((element, index) => {element.addEventListener("click", (event) => {updateMeasureUnit(element.innerText, false)})})
+    let colorSchemeButtons = document.querySelectorAll("#colorScheme button")
+    colorSchemeButtons.forEach((element, index) => {element.addEventListener("click", (event) => {updateColorScheme(element.innerText, false)})})
+    let searchEngineImages = document.querySelectorAll("#searchEngine img")
+    searchEngineImages.forEach((element, index) => {element.addEventListener("click", (event) => {updateSearchEngine(element.id, false)})})
     
     document.getElementById("twitchShortcut").addEventListener("click", (event) => {window.open(`https://twitch.tv`, window.name)})
     document.getElementById("overleafShortcut").addEventListener("click", (event) => {window.open(`https://overleaf.com`, window.name)})
@@ -168,6 +181,8 @@ function setDayCycleIcon(weatherInfo){
 
 
 //---SEARCH_BAR---
+let searchEngine = "google"
+
 function updateSearchBar(){
     let searchBarField = document.getElementById("searchBarField")
     let date = new Date();
@@ -186,11 +201,46 @@ function updateSearchBar(){
     searchBarIcon.top = searchBarPosition.top
 }
 
+function updateSearchBarPlaceholder(){
+    let searchBarField = document.getElementById("searchBarField")
+    let date = new Date();
+    let hours = date.getHours()
+
+    if(selectedLanguage === "English"){
+        switch(true){
+            case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = `Good Morning, ${userName}. Ready to search the world?`;
+            case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = `Good Afternoon, ${userName}. Ready to search the world?`;
+            case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = `Good Evening, ${userName}. Ready to search the world?`;
+            case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = `Get some sleep, ${userName}. There's still tomorrow to explore the world.`;
+        }
+    }else{
+        switch(true){
+            case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = `Guten Morgen, ${userName}. Bereit, die Welt zu erkunden?`;
+            case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = `Guten Nachmittag, ${userName}. Bereit, die Welt zu erkunden?`;
+            case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = `Guten Abend, ${userName}. Bereit, die Welt zu erkunden?`;
+            case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = `Ruhe dich aus, ${userName}. Du kannst auch morgen die Welt erkunden.`;
+        }
+    }
+}
+
 function searchBarOnClick(){
     let searchBarField = document.getElementById("searchBarField")
     let query = searchBarField.value
-    window.open(`https://google.com/search?q=${query}`, window.name)
-    searchBar.value = ""
+    if(query.trim() !== ""){
+        switch(searchEngine){
+            case "google": return window.open(`https://google.com/search?q=${query}`, window.name)
+            case "ecosia": return window.open(`https://www.ecosia.org/search?method=index&q=${query}`, window.name)
+            case "duckDuckGo": return window.open(`https://duckduckgo.com/?t=h_&q=${query}`, window.name)
+            case "bing": return window.open(`https://www.bing.com/search?q=${query}`, window.name)
+        }
+        searchBarField.value = ""
+    }
+}
+
+
+//---SETTINGS_GENERAL---
+let settingsActive = false;
+
 function setSavedSettings(){
     chrome.storage.sync.get(["colorOn"]).then((color) => {
         if(color.colorOn !== undefined){
@@ -200,5 +250,222 @@ function setSavedSettings(){
         }
         updateImageColor()
     });
+    
+    chrome.storage.sync.get(["colorScheme"]).then((color) => { 
+        if(color.colorScheme !== undefined){
+            updateColorScheme(color.colorScheme, true)
+        }else{
+            updateColorScheme("colorSchemeViolet", false)   
+        }
+    });
+    
+    chrome.storage.sync.get(["searchEngine"]).then((engine) => {
+        if(engine.searchEngine !== undefined){
+            updateSearchEngine(engine.searchEngine, true)
+        }else{
+            updateSearchEngine("google", false)
+        }
+    });
+
+    chrome.storage.sync.get(["userName"]).then((name) => {
+        if(name.userName !== undefined){
+            userName = name.userName
+            updateUserName(true)
+        }else{
+            updateUserName(false)
+        }
+    });
+
+    chrome.storage.sync.get(["measureUnit"]).then((unit) => {
+        if(unit.measureUnit !== undefined){
+            updateMeasureUnit(unit.measureUnit, true)
+        }else{
+            updateMeasureUnit("Metric", false)
+        }
+    });
+
+    chrome.storage.sync.get(["language"]).then((language) => {
+        if(language.language !== undefined){
+            updateLanguage(language.language, true)
+        }else{
+            updateLanguage("English", false)
+        }
+    });
 }
+
+function toggleSettings(){
+    settingsActive = !settingsActive;
+    let settings = document.getElementById("settings")
+    settings.style.visibility = settingsActive? "visible" : "hidden";
+}
+
+//---SETTINGS_USER_NAME---
+let userName = "Fellow Human"
+function updateUserName(sync){
+    let userNameInput = document.getElementById("userNameInput")
+    if(!sync){
+        userName = (userNameInput.value !== "")? userNameInput.value : userName
+        chrome.storage.sync.set({ "userName": userName }).then(() => {});
+    }
+    
+    userNameInput.value = userName
+    userNameInput.placeholder = userName
+    updateSearchBarPlaceholder()
+}
+
+//---SETTINGS_LANGUAGE
+let selectedLanguage = "English"
+let languageCode = "en"
+function updateLanguage(language, sync){
+    if(language === "English" || language === "Englisch"){
+        selectedLanguage = "English"
+        languageCode = "en"
+    }else{
+        selectedLanguage = "German"
+        languageCode = "de"
+    }
+    
+    if(!sync){
+        chrome.storage.sync.set({ "language": selectedLanguage }).then(() => {});
+    }
+
+    let buttons = document.querySelectorAll("#language button")
+    buttons.forEach((element, index) => {element.setAttribute("state","inactive")})
+    let selectedButton = document.getElementById(`languageButton${selectedLanguage}`)
+    selectedButton.setAttribute("state","active")
+    
+    updateSearchBarPlaceholder()
+    updateSettingsLanguage(selectedLanguage)
+    updateAccessabilityLanguage(selectedLanguage)
+    getWeatherInfo()
+}
+
+async function updateSettingsLanguage(language){
+    let userNameText = document.getElementById("userNameText")
+    
+    let languageText = document.getElementById("languageText")
+    let languageButtonEnglish = document.getElementById(`languageButtonEnglish`)
+    let languageButtonGerman = document.getElementById(`languageButtonGerman`)
+    
+    let measureUnitText = document.getElementById("measureUnitText")
+    let measureUnitButtonMetric = document.getElementById("measureUnitMetric")
+    let measureUnitButtonImperial = document.getElementById("measureUnitImperial")
+    
+    let colorSchemeText = document.getElementById("colorSchemeText")
+    let colorSchemeButtonBlue = document.getElementById("colorSchemeBlue")
+    let colorSchemeButtonViolet = document.getElementById("colorSchemeViolet")
+    let colorSchemeButtonGreen = document.getElementById("colorSchemeGreen")
+    let colorSchemeButtonRed = document.getElementById("colorSchemeRed")
+    
+    let searchEngineText = document.getElementById("searchEngineText")
+    
+    let localization = (await (await fetch("../localization.json")).json())[language]
+    
+    userNameText.innerText = localization.userNameText
+    
+    languageText.innerText = localization.languageText
+    languageButtonEnglish.innerText = localization.languageButtonEnglish
+    languageButtonGerman.innerText = localization.languageButtonGerman
+    
+    measureUnitText.innerText = localization.measureUnitText
+    measureUnitButtonMetric.innerText = localization.measureUnitMetric
+    measureUnitButtonImperial.innerText = localization.measureUnitImperial
+    
+    colorSchemeText.innerText = localization.colorSchemeText
+    colorSchemeButtonBlue.innerText = localization.colorSchemeBlue
+    colorSchemeButtonViolet.innerText = localization.colorSchemeViolet
+    colorSchemeButtonGreen.innerText = localization.colorSchemeGreen
+    colorSchemeButtonRed.innerText = localization.colorSchemeRed
+    
+    searchEngineText.innerText = localization.searchEngineText
+}
+
+//---SETTINGS_MEASURE_UNIT
+let measureUnit = "Metric"
+let temperatureUnit = "°C"
+let speedUnit = "m/s"
+function updateMeasureUnit(unit, sync){
+    if(unit === "Metric" || unit === "Metrisch"){
+        measureUnit = "Metric"
+        temperatureUnit = "°C"
+        speedUnit = "m/s"
+    }else{
+        measureUnit = "Imperial"
+        temperatureUnit = "°F"
+        speedUnit = "mph"
+    }
+    
+    if(!sync){
+        chrome.storage.sync.set({ "measureUnit": measureUnit }).then(() => {});
+    }
+    
+    let buttons = document.querySelectorAll("#measureUnit button")
+    buttons.forEach((element, index) => {element.setAttribute("state","inactive")})
+    let selectedButton = document.getElementById(`measureUnit${measureUnit}`)
+    selectedButton.setAttribute("state","active")
+    
+    getWeatherInfo()
+}
+
+//---SETTINGS_COLOR_SCHEME---
+let currentColor = "Violet"
+function updateColorScheme(color, sync){
+    if(color === "Blue" || color === "Blau"){
+        currentColor = "Blue"
+    }else if(color === "Violet" || color === "Lila"){
+        currentColor = "Violet"
+    }else if(color === "Green" || color === "Grün"){
+        currentColor = "Green"
+    }else{
+        currentColor = "Red"
+    }
+    
+    if(!sync){
+        chrome.storage.sync.set({ "colorScheme": currentColor }).then(() => {});
+    }
+    
+    let buttons = document.querySelectorAll("#colorScheme button")
+    buttons.forEach((element, index) => {element.setAttribute("state","inactive")})
+    let selectedButton = document.getElementById(`colorScheme${currentColor}`)
+    selectedButton.setAttribute("state","active")
+    
+    setColor(currentColor)
+}
+
+function setColor(color){
+    switch(color){
+        case `Blue`: {
+            document.body.style.setProperty("--primaryColor","#033D6B")
+            document.body.style.setProperty("--secondaryColor","#1b79c4")
+            break;
+        }
+        case `Violet`: {
+            document.body.style.setProperty("--primaryColor","#370140")
+            document.body.style.setProperty("--secondaryColor","#720484")
+            break;
+        }
+        case `Green`: {
+            document.body.style.setProperty("--primaryColor","#345502")
+            document.body.style.setProperty("--secondaryColor","#6aaf03")
+            break;
+        }
+        case `Red`: {
+            document.body.style.setProperty("--primaryColor","#450113")
+            document.body.style.setProperty("--secondaryColor","#b0133e")
+            break;
+        }
+    }
+}
+
+//---SETTINGS_SEARCH_ENGINE
+function updateSearchEngine(engine, sync){
+    if(!sync){
+        chrome.storage.sync.set({ "searchEngine": engine }).then(() => {});
+    }
+    let images = document.querySelectorAll("#searchEngine img")
+    images.forEach((element, index) => {element.setAttribute("state","inactive")})
+    let selectedEngine = document.getElementById(engine)
+    selectedEngine.setAttribute("state","active")
+    
+    searchEngine = engine;
 }
