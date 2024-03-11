@@ -9,6 +9,7 @@ function loadWindow(){
     getWeatherInfo()
 //--EVENT_LISTENERS---
 function setEventListeners(){
+    document.getElementById("powerButton").addEventListener("click", (event) => {window.close()})
     
     document.getElementById("twitchShortcut").addEventListener("click", (event) => {window.open(`https://twitch.tv`, window.name)})
     document.getElementById("overleafShortcut").addEventListener("click", (event) => {window.open(`https://overleaf.com`, window.name)})
