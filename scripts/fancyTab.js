@@ -235,7 +235,7 @@ function setDayCycleIcon(weatherInfo){
     dayCycleIcon.src = isDayTime ? "../images/dayCycleIcon.svg" : "../images/nightCycleIcon.svg"
     dayCycleIcon.style.position = "absolute"
     dayCycleIcon.style.left = x + "px"
-    dayCycleIcon.style.top = (75 - y) + "px"
+    dayCycleIcon.style.top = isDayTime ? (76 - y) + "px" : (72 - y) + "px"
 }
 
 
