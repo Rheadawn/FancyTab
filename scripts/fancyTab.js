@@ -1,17 +1,19 @@
 window.onload = loadWindow
 
 //---LOAD_WINDOW---
-function loadWindow(){
-    getRandomImage()
+async function loadWindow(){
+    await setSavedSettings()
+    openDataBase()
     setEventListeners()
     updateClock()
     updateSearchBar()
     getWeatherInfo()
-    setSavedSettings()
 }
 
 //--EVENT_LISTENERS---
 let colorOn = true
+let refreshBackgroundImageOn = true
+let currentBackgroundImage
 function setEventListeners(){
     document.getElementById("powerButton").addEventListener("click", (event) => {window.close()})
     document.getElementById("colorButton").addEventListener("click", (event) => {
@@ -19,6 +21,17 @@ function setEventListeners(){
         chrome.storage.sync.set({ "colorOn": colorOn }).then(() => {});
         document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
         updateImageColor()
+    })
+    document.getElementById("refreshButton").addEventListener("click", async (event) => {
+        refreshBackgroundImageOn = !refreshBackgroundImageOn
+        chrome.storage.local.set({ "refreshBackgroundImageOn": refreshBackgroundImageOn }).then(() => {});
+        document.getElementById("refreshButton").src = refreshBackgroundImageOn? "../images/imageRefreshOn.svg" : "../images/imageRefreshOff.svg"
+        if (refreshBackgroundImageOn){
+            let image = document.getElementById("backgroundImage")
+            image.style.backgroundImage = `url(${await fetchRandomImage()})`
+            fetchRandomImage()
+        } 
+        if (currentBackgroundImage) saveImageToDB(currentBackgroundImage)
     })
     document.getElementById("settingsIcon").addEventListener("click", (event) => {toggleSettings()})
     document.getElementById("searchBarButton").addEventListener("click", (event) => {searchBarOnClick()})
@@ -50,13 +63,79 @@ async function getCredentials() {
 }
 
 
+//---LOCAL_STORAGE---
+let db;
+function openDataBase(){
+    let request = indexedDB.open("localStorage")
+    
+    //Creating schema when opening db for first time
+    request.onupgradeneeded = (event) => {
+        let newDb = event.target.result
+        newDb.createObjectStore("images")
+
+        let image = document.getElementById("backgroundImage")
+        image.style.backgroundImage = `url(../images/defaultBackgroundImage.jpg)`
+    };
+    
+    //Handling success upon opening db
+    request.onsuccess = (event) => {
+        db = event.target.result
+        loadImageFromDB()
+    };
+}
+
+function loadImageFromDB(){
+    let transaction = db.transaction(["images"], "readwrite");
+    let imageStore = transaction.objectStore("images");
+    let request = imageStore.get("image")
+    let image = document.getElementById("backgroundImage")
+    
+    request.onerror = (event) => {
+        setDefaultImage()
+        if(refreshBackgroundImageOn){
+            fetchRandomImage()
+        }
+    }
+    
+    request.onsuccess = (event) => {
+        (request.result === undefined)? setDefaultImage() : image.style.backgroundImage = `url(${URL.createObjectURL(request.result)})`
+        currentBackgroundImage = request.result
+        if(refreshBackgroundImageOn){
+            fetchRandomImage()
+        }
+    }
+}
+
+function saveImageToDB(blob){
+    let transaction = db.transaction(["images"], "readwrite");
+    let imageStore = transaction.objectStore("images");
+
+    imageStore.put(blob, "image")
+}
+
+
 //---WALLPAPERS---
-async function getRandomImage(){
+function setDefaultImage(){
+    let image = document.getElementById("backgroundImage")
+    image.style.backgroundImage = `url(../images/defaultBackgroundImage.jpg)`
+}
+
+async function fetchRandomImage(){
     let credentials = await getCredentials()
     let imageResponse = await (await fetch(`https://api.unsplash.com/photos/random?client_id=${credentials.imageAPI.accessKey}&orientation=landscape&query=wallpaper,nature,animals`)).json()
-    let imageURL = imageResponse.urls.full
-    let image = document.getElementById("backgroundImage")
-    image.style.backgroundImage = `url("${imageURL}")`
+    let imageURL = imageResponse.urls.raw + "&w=1920&h=1080";
+    imageToBlobAndSave(imageURL)
+    return imageURL
+}
+
+function imageToBlobAndSave(src) {
+    fetch(src)
+        .then(response => response.blob())
+        .then(blob => {
+            const reader = new FileReader()
+            reader.readAsDataURL(blob)
+            saveImageToDB(blob)
+        })
 }
 
 function updateImageColor(){
@@ -292,7 +371,7 @@ function searchBarOnClick(){
 //---SETTINGS_GENERAL---
 let settingsActive = false;
 
-function setSavedSettings(){
+async function setSavedSettings(){
     chrome.storage.sync.get(["colorOn"]).then((color) => {
         if(color.colorOn !== undefined){
             colorOn = color.colorOn
@@ -302,6 +381,14 @@ function setSavedSettings(){
         }
         updateImageColor()
     });
+
+    let result = await chrome.storage.local.get(["refreshBackgroundImageOn"])
+    if(result.refreshBackgroundImageOn !== undefined){
+        refreshBackgroundImageOn = result.refreshBackgroundImageOn
+        document.getElementById("refreshButton").src = refreshBackgroundImageOn? "../images/imageRefreshOn.svg" : "../images/imageRefreshOff.svg"
+    }else{
+        document.getElementById("refreshButton").src = "../images/imageRefreshOn.svg"
+    }
     
     chrome.storage.sync.get(["colorScheme"]).then((color) => { 
         if(color.colorScheme !== undefined){

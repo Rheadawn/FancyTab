@@ -11,6 +11,7 @@ body {
     height: 100vh;
     margin: 0; /* Removes scroll bars */
     overflow: hidden;
+    background-color: black;
 }
 
 .text{
@@ -35,13 +36,26 @@ body {
     height: 50px;
 }
 
-#colorButton{
+#backgroundImageButtons{
     position: absolute;
     z-index: 1;
-    right: 0;
+    right: 10px;
     top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    gap: 10px;
+}
+
+#colorButton{
     width: 50px;
     height: 50px;
+}
+
+#refreshButton{
+    width: 40px;
+    height: 40px;
 }
 
 #backgroundImage{
