@@ -1,3 +1,6 @@
+/*
+/// GENERAL_CSS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+ */
 :root{
     --primaryColor: #370140;
     --secondaryColor: #720484;
@@ -27,13 +30,28 @@ body {
     line-height: 0.75;
 }
 
-#powerButton{
+#dashboard{
+    position: relative; /* Needed for margin-top to work */
+    margin-top: 50px;  /* Specific Y value for positioning */
+    display: flex;
+    flex-direction: column; /* Items stacked vertically */
+    align-items: center;  /* Items centered horizontally */
+}
+
+
+
+/*
+/// BACKGROUND_AND_BUTTONS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ */
+#backgroundImage{
+    background-size: cover; /* Lets image cover whole screen */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll; /* Image will stay on screen while scrolling */
+    width: 100vw;
+    height: 100vh;
+    margin: 0; /* Removes scroll bars */
     position: absolute;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 50px;
-    height: 50px;
 }
 
 #backgroundImageButtons{
@@ -58,35 +76,20 @@ body {
     height: 40px;
 }
 
-#backgroundImage{
-    background-size: cover; /* Lets image cover whole screen */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: scroll; /* Image will stay on screen while scrolling */
-    width: 100vw;
-    height: 100vh;
-    margin: 0; /* Removes scroll bars */
+#powerButton{
     position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
 }
 
-#weatherInfo{
-    position: fixed;
-    bottom:0;
-    background-color: blue;
-    width: 100vw;
-    height: 100px;
-    display: none;
-    z-index: 2;
-}
 
-#dashboard{
-    position: relative; /* Needed for margin-top to work */
-    margin-top: 50px;  /* Specific Y value for positioning */
-    display: flex;
-    flex-direction: column; /* Items stacked vertically */
-    align-items: center;  /* Items centered horizontally */
-}
 
+/*
+/// DATE ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ */
 #time {
     font-size: 128px;
     font-weight: 400;
@@ -98,6 +101,17 @@ body {
     margin-top: 15px;
 }
 
+#date{
+    font-size: 32px;
+    font-weight: 500;
+    margin-top: 26px;
+}
+
+
+
+/*
+/// SHORTCUTS //////////////////////////////////////////////////////////////////////////////////////////////////////////
+ */
 #shortcuts{
     position: relative;
     display: flex;
@@ -144,12 +158,11 @@ body {
     scale: 1.1;
 }
 
-#date{
-    font-size: 32px;
-    font-weight: 500;
-    margin-top: 26px;
-}
 
+
+/*
+/// SETTINGS ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+ */
 #settings{
     position: relative;
     display: flex;
@@ -160,8 +173,7 @@ body {
     border-radius: 30px;
     width: 440px;
     border: 4px solid rgba(0,0,0,0.75);
-    background: linear-gradient(180deg, color-mix(in srgb,var(--primaryColor),transparent 25%) 0%, rgba(0, 0, 0, 0) 76%);
-    background-color: rgba(0,0,0,0.75);
+    background: rgba(0, 0, 0, 0.75) linear-gradient(180deg, color-mix(in srgb, var(--primaryColor), transparent 25%) 0%, rgba(0, 0, 0, 0) 76%);
     padding: 30px;
 }
 
@@ -254,6 +266,11 @@ body {
     opacity: 100%;
 }
 
+
+
+/*
+/// SEARCH_BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////
+ */
 #searchBar{
     position: relative;
     margin-top: 16px;
@@ -307,6 +324,11 @@ input:active,input:focus{
     outline: none;
 }
 
+
+
+/*
+/// WEATHER_INFO ///////////////////////////////////////////////////////////////////////////////////////////////////////
+ */
 #weatherInfoContainer{
     position: absolute;
     left: 0;
@@ -317,8 +339,7 @@ input:active,input:focus{
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    background: linear-gradient(180deg, color-mix(in srgb,var(--primaryColor),transparent 25%) 0%, rgba(0, 0, 0, 0) 25%);
-    background-color: rgba(0,0,0,0.75);
+    background: rgba(0, 0, 0, 0.75) linear-gradient(180deg, color-mix(in srgb, var(--primaryColor), transparent 25%) 0%, rgba(0, 0, 0, 0) 25%);
 }
 
 #temperatureColumn{
