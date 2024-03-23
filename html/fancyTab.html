@@ -19,26 +19,45 @@
         <img id="colorButton" alt="Button that switches between colorful and greyscale background picture" src="../images/colorOn.svg">
         <img id="refreshButton" alt="Button that determines if the background image gets reset for every new tab" src="../images/imageRefreshOn.svg">
     </div>
-    
     <div id="backgroundImage"></div>
+    <dialog id="shortcutDialog">
+        <div id="shortcutURL" class="settingsContainer" style="gap:10px;">
+            <label id="shortcutURLText" for="shortcutURLInput" class="text settingsTexts">Shortcut URL:</label>
+            <input type="url" required pattern="https?:\/\/\S+\.\S+" id="shortcutURLInput" class="inputField shortcutInputField" name="shortcutURLInput"  placeholder="https://forwards-dev.de/" style="width:270px;"/>
+        </div>
+        <div id="shortcutImage" class="settingsContainer" style="gap:10px;">
+            <label id="shortcutImageText" for="shortcutImageInput" class="text settingsTexts">Shortcut File:</label>
+            <input type="file" id="shortcutImageInput" class="inputField shortcutInputField" accept="image/png, image/jpeg, image/svg+xml" style="width:270px;"/>
+        </div>
+    </dialog>
     <div id="dashboard">
         <div id="time" class="text">12:42</div>
         <div id="day" class="text">MONDAY</div>
         <div id="shortcuts">
             <div id="upperShortcuts">
-                <img id="twitchShortcut" alt="Link to Twitch" src="../images/twitchShortcut.svg">
-                <img id="overleafShortcut" alt="Link to Overleaf" src="../images/overleafShortcut.svg">
+                <div class="shortcutBackground">
+                    <div id="firstShortcut" class="shortcutImage"></div>
+                </div>
+                <div class="shortcutBackground">
+                    <div id="secondShortcut" class="shortcutImage"></div>
+                </div>
             </div>
             <div id="lowerShortcuts">
-                <img id="youtubeShortcut" alt="Link to YouTube" src="../images/youtubeShortcut.svg">
-                <img id="githubShortcut" alt="Link to GitHub" src="../images/githubShortcut.svg">
-                <img id="gitlabShortcut" alt="Link to GitLab" src="../images/gitlabShortcut.svg">
+                <div class="shortcutBackground">
+                    <div id="thirdShortcut" class="shortcutImage"></div>
+                </div>
+                <div class="shortcutBackground">
+                    <div id="fourthShortcut" class="shortcutImage"></div>
+                </div>
+                <div class="shortcutBackground">
+                    <div  id="fifthShortcut" class="shortcutImage"></div>
+                </div>
             </div>
         </div>
         <div id="settings" style="visibility: hidden;">
             <div id="userName" class="settingsContainer">
                 <label id="userNameText" for="userNameInput" class="text settingsTexts">User Name:</label>
-                <input id="userNameInput" name="userNameInput" type="text" placeholder="Fellow Human" value="Fellow Human"/>
+                <input id="userNameInput" class="inputField" name="userNameInput" type="text" placeholder="Fellow Human" value="Fellow Human"/>
             </div>
             <div id="language" class="settingsContainer">
                 <p id="languageText" class="text settingsTexts">Language:</p>

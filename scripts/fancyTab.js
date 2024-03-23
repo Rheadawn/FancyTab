@@ -1,21 +1,30 @@
 window.onload = loadWindow
 
-//---LOAD_WINDOW---
+//---LOAD_WINDOW---/////////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadWindow(){
     await setSavedSettings()
     openDataBase()
     setEventListeners()
     updateClock()
     updateSearchBar()
-    getWeatherInfo()
+    updateWeatherInfo()
 }
 
-//--EVENT_LISTENERS---
+
+
+//--EVENT_LISTENERS---//////////////////////////////////////////////////////////////////////////////////////////////////
 let colorOn = true
 let refreshBackgroundImageOn = true
 let currentBackgroundImage
+let shortcutURL = ["https://twitch.tv", "https://overleaf.com", "https://youtube.com", "https://github.com", "https://gitlab.com"]
+let shortcutImage = ["../images/twitchShortcut.svg", "../images/overleafShortcut.svg", "../images/youtubeShortcut.svg", "../images/githubShortcut.svg", "../images/gitlabShortcut.svg"]
+let selectedShortcutIndex;
+
 function setEventListeners(){
+    //Event Listener for the POWER BUTTON
     document.getElementById("powerButton").addEventListener("click", (event) => {window.close()})
+
+    //Event Listeners for everything BACKGROUND IMAGE related
     document.getElementById("colorButton").addEventListener("click", (event) => {
         colorOn = !colorOn
         chrome.storage.sync.set({ "colorOn": colorOn }).then(() => {});
@@ -33,10 +42,13 @@ function setEventListeners(){
         } 
         if (currentBackgroundImage) saveImageToDB(currentBackgroundImage)
     })
-    document.getElementById("settingsIcon").addEventListener("click", (event) => {toggleSettings()})
+    
+    //Event Listeners for everything SEARCH BAR related
     document.getElementById("searchBarButton").addEventListener("click", (event) => {searchBarOnClick()})
     document.getElementById("searchBarField").addEventListener("keydown", (event) => {if(event.key === "Enter"){searchBarOnClick()}})
 
+    //Event Listeners for everything SETTINGS related
+    document.getElementById("settingsIcon").addEventListener("click", (event) => {toggleSettings()})
     document.getElementById("userNameInput").addEventListener("change", (event) => {updateUserName(false)})
     let languageButtons = document.querySelectorAll("#language button")
     languageButtons.forEach((element, index) => {element.addEventListener("click", (event) => {updateLanguage(element.innerText, false)})})
@@ -47,23 +59,57 @@ function setEventListeners(){
     let searchEngineImages = document.querySelectorAll("#searchEngine img")
     searchEngineImages.forEach((element, index) => {element.addEventListener("click", (event) => {updateSearchEngine(element.id, false)})})
     
-    document.getElementById("twitchShortcut").addEventListener("click", (event) => {window.open(`https://twitch.tv`, window.name)})
-    document.getElementById("overleafShortcut").addEventListener("click", (event) => {window.open(`https://overleaf.com`, window.name)})
-    document.getElementById("youtubeShortcut").addEventListener("click", (event) => {window.open(`https://youtube.com`, window.name)})
-    document.getElementById("githubShortcut").addEventListener("click", (event) => {window.open(`https://github.com`, window.name)})
-    document.getElementById("gitlabShortcut").addEventListener("click", (event) => {window.open(`https://gitlab.com`, window.name)})
+    //Event Listeners for everything SHORTCUT related
+    let shortcuts = document.querySelectorAll("div.shortcutImage")
+    shortcuts.forEach((element, index) => {element.addEventListener("click",(event) => {window.open(shortcutURL[index], window.name)})})
+    shortcuts.forEach((element, index) => {element.addEventListener("contextmenu",(event) => {
+        event.preventDefault()
+        if(settingsActive) toggleSettings()
+        let dialog = document.getElementById("shortcutDialog")
+        dialog.open && (selectedShortcutIndex === index)? dialog.close() : dialog.show()
+        selectedShortcutIndex = index
+        document.getElementById("shortcutURLInput").value = shortcutURL[index]
+    })})
+    document.getElementById("shortcutURLInput").addEventListener("change", (event) => {
+        if(event.target.checkValidity()){
+            shortcutURL[selectedShortcutIndex] = event.target.value
+            chrome.storage.local.set({ "shortcutURL": JSON.stringify(shortcutURL) }).then(() => {});
+        }
+    })
+    document.getElementById("shortcutImageInput").addEventListener("change", async (event) => {
+        let imageBase64 = await imageToBase64(event.target.files[0])
+        shortcutImage[selectedShortcutIndex] = imageBase64
+        shortcuts[selectedShortcutIndex].style.backgroundImage = `url(${imageBase64})`
+        chrome.storage.local.set({ "shortcutImage": JSON.stringify(shortcutImage) }).then(() => {});
+    })
     
+    //Event Listener for changes to chrome SYNC STORAGE
     chrome.storage.onChanged.addListener((changes) => {setSavedSettings()})
 }
 
-//---CREDENTIALS---
+
+
+//---CREDENTIALS---/////////////////////////////////////////////////////////////////////////////////////////////////////
 async function getCredentials() {
     let apiCredentialsResponse = await fetch("../config.json")
      return await apiCredentialsResponse.json()
 }
 
 
-//---LOCAL_STORAGE---
+
+//---SHORTCUTS---///////////////////////////////////////////////////////////////////////////////////////////////////////
+function imageToBase64(image){
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => resolve(event.target.result)
+        reader.onerror = reject
+        reader.readAsDataURL(image);
+    })
+}
+
+
+
+//---LOCAL_STORAGE---///////////////////////////////////////////////////////////////////////////////////////////////////
 let db;
 function openDataBase(){
     let request = indexedDB.open("localStorage")
@@ -114,7 +160,8 @@ function saveImageToDB(blob){
 }
 
 
-//---WALLPAPERS---
+
+//---BACKGROUND_IMAGE---////////////////////////////////////////////////////////////////////////////////////////////////
 function setDefaultImage(){
     let image = document.getElementById("backgroundImage")
     image.style.backgroundImage = `url(../images/defaultBackgroundImage.jpg)`
@@ -124,11 +171,11 @@ async function fetchRandomImage(){
     let credentials = await getCredentials()
     let imageResponse = await (await fetch(`https://api.unsplash.com/photos/random?client_id=${credentials.imageAPI.accessKey}&orientation=landscape&query=wallpaper,nature,animals`)).json()
     let imageURL = imageResponse.urls.raw + "&w=1920&h=1080";
-    imageToBlobAndSave(imageURL)
+    imageURLToBlobAndSave(imageURL)
     return imageURL
 }
 
-function imageToBlobAndSave(src) {
+function imageURLToBlobAndSave(src) {
     fetch(src)
         .then(response => response.blob())
         .then(blob => {
@@ -148,7 +195,8 @@ function updateImageColor(){
 }
 
 
-//---CLOCK_UPDATE---
+
+//---CLOCK_UPDATE---////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateClock(){
     let date = new Date();
 
@@ -169,8 +217,9 @@ function updateClock(){
 }
 
 
-//---WEATHER_INFO---
-async function getWeatherInfo(){
+
+//---WEATHER_INFO---////////////////////////////////////////////////////////////////////////////////////////////////////
+async function updateWeatherInfo(){
     let credentials = await getCredentials()
     let accessKey = credentials.weatherAPI.accessKey
     navigator.geolocation.getCurrentPosition(
@@ -368,7 +417,8 @@ function searchBarOnClick(){
 }
 
 
-//---SETTINGS_GENERAL---
+
+//---SETTINGS_GENERAL---////////////////////////////////////////////////////////////////////////////////////////////////
 let settingsActive = false;
 
 async function setSavedSettings(){
@@ -389,6 +439,24 @@ async function setSavedSettings(){
     }else{
         document.getElementById("refreshButton").src = "../images/imageRefreshOn.svg"
     }
+    
+    chrome.storage.local.get(["shortcutURL"]).then((result) => {
+        if(result.shortcutURL) shortcutURL = JSON.parse(result.shortcutURL)
+    })
+
+    chrome.storage.local.get(["shortcutImage"]).then((result) => {
+        if(result.shortcutImage){
+            let newShortcutImage = JSON.parse(result.shortcutImage)
+            newShortcutImage.forEach((element, index) => {
+                if(element !== "") shortcutImage[index] = element
+            })
+        }
+
+        let shortcuts = document.querySelectorAll("div.shortcutImage")
+        shortcutImage.forEach((element, index) => {
+            shortcuts[index].style.backgroundImage = `url(${element})`
+        })
+    })
     
     chrome.storage.sync.get(["colorScheme"]).then((color) => { 
         if(color.colorScheme !== undefined){
@@ -436,9 +504,13 @@ function toggleSettings(){
     settingsActive = !settingsActive;
     let settings = document.getElementById("settings")
     settings.style.visibility = settingsActive? "visible" : "hidden";
+    let shortcutDialog = document.getElementById("shortcutDialog")
+    if(settingsActive) shortcutDialog.close()
 }
 
-//---SETTINGS_USER_NAME---
+
+
+//---SETTINGS_USER_NAME---//////////////////////////////////////////////////////////////////////////////////////////////
 let userName = "Fellow Human"
 function updateUserName(sync){
     let userNameInput = document.getElementById("userNameInput")
@@ -452,7 +524,9 @@ function updateUserName(sync){
     updateSearchBarPlaceholder()
 }
 
-//---SETTINGS_LANGUAGE
+
+
+//---SETTINGS_LANGUAGE---///////////////////////////////////////////////////////////////////////////////////////////////
 let selectedLanguage = "English"
 let languageCode = "en"
 function updateLanguage(language, sync){
@@ -475,7 +549,7 @@ function updateLanguage(language, sync){
     
     updateSearchBarPlaceholder()
     updateSettingsLanguage(selectedLanguage)
-    getWeatherInfo()
+    updateWeatherInfo()
 }
 
 async function updateSettingsLanguage(language){
@@ -518,7 +592,9 @@ async function updateSettingsLanguage(language){
     searchEngineText.innerText = localization.searchEngineText
 }
 
-//---SETTINGS_MEASURE_UNIT
+
+
+//---SETTINGS_MEASURE_UNIT---///////////////////////////////////////////////////////////////////////////////////////////
 let measureUnit = "Metric"
 let temperatureUnit = "°C"
 let speedUnit = "m/s"
@@ -542,10 +618,12 @@ function updateMeasureUnit(unit, sync){
     let selectedButton = document.getElementById(`measureUnit${measureUnit}`)
     selectedButton.setAttribute("state","active")
     
-    getWeatherInfo()
+    updateWeatherInfo()
 }
 
-//---SETTINGS_COLOR_SCHEME---
+
+
+//---SETTINGS_COLOR_SCHEME---///////////////////////////////////////////////////////////////////////////////////////////
 let currentColor = "Violet"
 function updateColorScheme(color, sync){
     if(color === "Blue" || color === "Blau"){
@@ -595,7 +673,9 @@ function setColor(color){
     }
 }
 
-//---SETTINGS_SEARCH_ENGINE
+
+
+//---SETTINGS_SEARCH_ENGINE---//////////////////////////////////////////////////////////////////////////////////////////
 function updateSearchEngine(engine, sync){
     if(!sync){
         chrome.storage.sync.set({ "searchEngine": engine }).then(() => {});

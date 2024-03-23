@@ -128,17 +128,6 @@ body {
     width: 500px;
 }
 
-#upperShortcuts img{
-    width: 75px;
-    height: 75px;
-    cursor: pointer;
-    transition: 200ms ease-in-out scale;
-}
-
-#upperShortcuts img:hover{
-    scale: 1.1;
-}
-
 #lowerShortcuts{
     position: relative;
     display: flex;
@@ -147,15 +136,51 @@ body {
     width: 350px;
 }
 
-#lowerShortcuts img{
+#shortcutDialog{
+    z-index: 3;
+    padding: 10px 10px 10px 20px;
+    margin: 0;
+    left: calc(50% - 239px);
+    top: 45%;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border-radius: 30px;
+    width: 440px;
+    border: 4px solid rgba(0,0,0,0.75);
+    background: rgba(0, 0, 0, 0.75) linear-gradient(180deg, color-mix(in srgb, var(--primaryColor), transparent 25%) 0%, rgba(0, 0, 0, 0) 76%);
+}
+
+#shortcutDialog[open]{
+    display: flex;
+}
+
+.shortcutInputField{
+    width: 300px;
+}
+
+div.shortcutImage{
+    background-size: 40%;
     width: 75px;
     height: 75px;
     cursor: pointer;
     transition: 200ms ease-in-out scale;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-#lowerShortcuts img:hover{
+div.shortcutImage:hover{
     scale: 1.1;
+}
+
+div.shortcutBackground{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 75px;
+    height: 75px;
+    background-image: url(../images/shortcutBackground.svg);
+    background-repeat: no-repeat;
 }
 
 
@@ -229,7 +254,7 @@ body {
     color: white;
 }
 
-#userNameInput{
+.inputField{
     position: relative;
     width: 240px;
     height: 25px;
