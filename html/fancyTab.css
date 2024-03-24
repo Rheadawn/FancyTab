@@ -572,7 +572,6 @@ input:active,input:focus{
 #dayCycleColumn{
     position: relative;
     height: 130px;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -588,8 +587,10 @@ input:active,input:focus{
 
 #dayCycleImage{
     position: relative;
-    width: 180px;
-    height: 90px;
+    width: 150px;
+    height: 75.5px;
+    margin-bottom: -15px;
+    padding: 15px;
 }
 
 #dayCycleArch{

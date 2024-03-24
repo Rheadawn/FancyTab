@@ -357,14 +357,15 @@ function setDayCycleIcon(weatherInfo){
         dayCycleText.innerText = (selectedLanguage === "English")? "NIGHT CYCLE" : "NACHTZYKLUS"
     }
     let x = percentageOfCycleOver * 150
-    let y = Math.sin((180*(1-percentageOfCycleOver)) * Math.PI / 180) * 75
+    let y = 75 * Math.sin(Math.acos((x - 75) / 75))
 
     let dayCycleIcon = document.getElementById("dayCycleIcon")
     dayCycleIcon.src = isDayTime ? "../images/dayCycleIcon.svg" : "../images/nightCycleIcon.svg"
     dayCycleIcon.style.position = "absolute"
-    dayCycleIcon.style.left = x + "px"
-    dayCycleIcon.style.top = isDayTime ? (76 - y) + "px" : (72 - y) + "px"
+    dayCycleIcon.style.left =  x + "px"
+    dayCycleIcon.style.bottom = y + "px"
 }
+
 
 
 //---SEARCH_BAR---
