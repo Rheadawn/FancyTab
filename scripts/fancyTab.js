@@ -2,12 +2,15 @@ window.onload = loadWindow
 
 //---LOAD_WINDOW---/////////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadWindow(){
-    await setSavedSettings()
+    await initiateSettings()
+    await setSavedSettings(true)
     openDataBase()
     setEventListeners()
     updateClock()
     updateSearchBar()
     updateWeatherInfo()
+    setInterval(function(){updateClock(); updateSearchBar()}, 500) //update clock and searchbar every 0.5 seconds
+    setInterval(updateWeatherInfo, 1000*60*10) //update weather info every 10 minutes
 }
 
 
@@ -84,7 +87,7 @@ function setEventListeners(){
     })
     
     //Event Listener for changes to chrome SYNC STORAGE
-    chrome.storage.onChanged.addListener((changes) => {setSavedSettings()})
+    chrome.storage.onChanged.addListener((changes) => {setSavedSettings(false, changes)})
 }
 
 
@@ -219,6 +222,11 @@ function updateClock(){
 
 
 //---WEATHER_INFO---////////////////////////////////////////////////////////////////////////////////////////////////////
+let lastGeolocation
+let lastWeatherUpdateTime
+let lastWeatherInfo
+let lastWeatherForecast
+
 async function updateWeatherInfo(){
     let credentials = await getCredentials()
     let accessKey = credentials.weatherAPI.accessKey
@@ -228,19 +236,68 @@ async function updateWeatherInfo(){
     )
 }
 
+async function weatherUpdateNecessary(currentLatitude, currentLongitude){
+    let updateNecessary = false
+    
+    let geolocationResult = await chrome.storage.local.get(["lastGeolocation"])
+    if(geolocationResult.lastGeolocation !== undefined){
+        let lastLocation = geolocationResult.lastGeolocation
+        if(lastLocation.latitude.toFixed(2) === currentLatitude.toFixed(2) 
+            && lastLocation.longitude.toFixed(2) === currentLongitude.toFixed(2)){
+            updateNecessary = true
+        }
+    }else{
+        updateNecessary = true
+    }
+    
+    let updateTimeResult = await chrome.storage.local.get(["lastWeatherUpdateTime"])
+    if(updateTimeResult.lastWeatherUpdateTime !== undefined){
+        let currentTime = new Date()
+        if(currentTime - updateTimeResult.lastWeatherUpdateTime > 600000) updateNecessary = true
+    }else{
+        updateNecessary = true
+    }
+    
+    if(!updateNecessary) await retrieveLastWeatherData()
+    return updateNecessary
+}
+
+async function retrieveLastWeatherData(){
+    let weatherInfoResult = await chrome.storage.local.get(["lastWeatherInfo"])
+    if(weatherInfoResult.lastWeatherInfo !== undefined){
+        lastWeatherInfo =  weatherInfoResult.lastWeatherInfo
+    }
+    
+    let forecastResult = await chrome.storage.local.get(["lastWeatherForecast"])
+    if(forecastResult.lastWeatherForecast !== undefined){
+        lastWeatherForecast = forecastResult.lastWeatherForecast
+    }
+}
+
 async function onGeolocationSuccess(position, accessKey){
     let lat = position.coords.latitude
     let lon = position.coords.longitude
-    let weatherInfo = await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json()
+    let update = weatherUpdateNecessary(lat, lon)
+    let weatherInfo = update? await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json() : lastWeatherInfo
     displayWeatherInfo(weatherInfo)
-    let forecast = await (await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json()
+    let forecast = update? await (await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json() : lastWeatherForecast
     displayForecast(forecast)
+    if(update){
+        chrome.storage.local.set({ "lastGeolocation": {"latitude": position.coords.latitude, "longitude": position.coords.longitude} }).then(() => {});
+        chrome.storage.local.set({ "lastWeatherUpdateTime": new Date() }).then(() => {});
+        chrome.storage.local.set({ "lastWeatherInfo": weatherInfo }).then(() => {});
+        chrome.storage.local.set({ "lastWeatherForecast": forecast }).then(() => {});
+    }
 }
 
-async function onGeolocationError(positionError, accessKey){ // On Error default location: Reken
-    let weatherInfo = await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=51.8306&lon=7.0443&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json()
+async function onGeolocationError(positionError, accessKey){ // On Error and if no past data exists: default location is Reken
+    await retrieveLastWeatherData()
+    let notDefined = lastWeatherInfo === undefined || lastWeatherForecast === undefined
+    
+    let weatherInfo = notDefined? await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=51.8306&lon=7.0443&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json() : lastWeatherInfo
+    let forecast = notDefined? await (await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=51.8306&lon=7.0443&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json() : lastWeatherForecast
+
     displayWeatherInfo(weatherInfo)
-    let forecast = await (await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=51.8306&lon=7.0443&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json()
     displayForecast(forecast)
 }
 
@@ -421,84 +478,94 @@ function searchBarOnClick(){
 
 //---SETTINGS_GENERAL---////////////////////////////////////////////////////////////////////////////////////////////////
 let settingsActive = false;
+let syncSettingsKeys = ["colorOn", "shortcutURL", "colorScheme", "searchEngine", "userName", "measureUnit", "language"]
+let localSettingsKeys = ["refreshBackgroundImageOn", "shortcutImage"]
 
-async function setSavedSettings(){
-    chrome.storage.sync.get(["colorOn"]).then((color) => {
-        if(color.colorOn !== undefined){
-            colorOn = color.colorOn
-            document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
-        }else{
-            document.getElementById("colorButton").src = "../images/colorOn.svg"
+async function initiateSettings(){
+    for(let i=0; i < syncSettingsKeys.length; i++){
+        let key = syncSettingsKeys[i]
+        let result = await chrome.storage.sync.get([key])
+        if(!result) await chrome.storage.sync.set({key: undefined})
+    }
+    for(let i=0; i < localSettingsKeys.length; i++){
+        let key = localSettingsKeys[i]
+        let result = await chrome.storage.local.get([key])
+        if(!result) await chrome.storage.local.set({key: undefined})
+    }
+}
+
+async function setSavedSettings(onload, changes){
+    let settings = changes? objectMap(changes, element => element.newValue) : await chrome.storage.sync.get()
+    Object.keys(settings).forEach(key => {
+        let value = settings[key]
+        switch(key){
+            case "colorOn": return updateColorOn(value)
+            case "shortcutURL": if(value) shortcutURL = JSON.parse(value); return
+            case "colorScheme": return value? updateColorScheme(value, true) : updateColorScheme("colorSchemeViolet", false)
+            case "searchEngine": return value?  updateSearchEngine(value, true) : updateSearchEngine("google", false)
+            case "userName": return value? updateUserNameValue(value) : updateUserName(false)
+            case "measureUnit": return value? updateMeasureUnit(value, true, onload) : updateMeasureUnit("Metric", false, onload)
+            case "language": return value? updateLanguage(value, true, onload) : updateLanguage("English", false, onload)
         }
-        updateImageColor()
-    });
+    })
+    
+    let localSettings = changes? objectMap(changes, element => element.newValue) : await chrome.storage.local.get()
+    Object.keys(localSettings).forEach(key => {
+        let value = localSettings[key]
+        console.log(key, value)
+        switch(key){
+            case "refreshBackgroundImageOn": return updateRefreshBackgroundImageOn(value)
+            case "shortcutImage": return updateShortcutImage(value)
+            case "lastWeatherInfo": return updateWeatherInfo()
+            case "lastWeatherForecast": return updateWeatherInfo()
+        }
+    })
+}
 
-    let result = await chrome.storage.local.get(["refreshBackgroundImageOn"])
-    if(result.refreshBackgroundImageOn !== undefined){
-        refreshBackgroundImageOn = result.refreshBackgroundImageOn
+function objectMap(object, fn){
+    return Object.fromEntries(
+        Object.entries(object).map(
+            ([k,v], i) => [k, fn(v,k,i)]
+        )
+    )
+}
+
+function updateColorOn(colorOnValue){
+    if(colorOnValue !== undefined){
+        colorOn = colorOnValue
+        document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
+    }else{
+        document.getElementById("colorButton").src = "../images/colorOn.svg"
+    }
+    updateImageColor()
+}
+
+function updateUserNameValue(userNameValue){
+    userName = userNameValue
+    updateUserName(true)
+}
+
+function updateRefreshBackgroundImageOn(backgroundImageOnValue){
+    if(backgroundImageOnValue !== undefined){
+        refreshBackgroundImageOn = backgroundImageOnValue
         document.getElementById("refreshButton").src = refreshBackgroundImageOn? "../images/imageRefreshOn.svg" : "../images/imageRefreshOff.svg"
     }else{
         document.getElementById("refreshButton").src = "../images/imageRefreshOn.svg"
     }
-    
-    chrome.storage.local.get(["shortcutURL"]).then((result) => {
-        if(result.shortcutURL) shortcutURL = JSON.parse(result.shortcutURL)
-    })
+}
 
-    chrome.storage.local.get(["shortcutImage"]).then((result) => {
-        if(result.shortcutImage){
-            let newShortcutImage = JSON.parse(result.shortcutImage)
-            newShortcutImage.forEach((element, index) => {
-                if(element !== "") shortcutImage[index] = element
-            })
-        }
-
-        let shortcuts = document.querySelectorAll("div.shortcutImage")
-        shortcutImage.forEach((element, index) => {
-            shortcuts[index].style.backgroundImage = `url(${element})`
+function updateShortcutImage(shortcutImageValue){
+    if(shortcutImageValue){
+        let newShortcutImage = JSON.parse(shortcutImageValue)
+        newShortcutImage.forEach((element, index) => {
+            if(element !== "") shortcutImage[index] = element
         })
+    }
+
+    let shortcuts = document.querySelectorAll("div.shortcutImage")
+    shortcutImage.forEach((element, index) => {
+        shortcuts[index].style.backgroundImage = `url(${element})`
     })
-    
-    chrome.storage.sync.get(["colorScheme"]).then((color) => { 
-        if(color.colorScheme !== undefined){
-            updateColorScheme(color.colorScheme, true)
-        }else{
-            updateColorScheme("colorSchemeViolet", false)   
-        }
-    });
-    
-    chrome.storage.sync.get(["searchEngine"]).then((engine) => {
-        if(engine.searchEngine !== undefined){
-            updateSearchEngine(engine.searchEngine, true)
-        }else{
-            updateSearchEngine("google", false)
-        }
-    });
-
-    chrome.storage.sync.get(["userName"]).then((name) => {
-        if(name.userName !== undefined){
-            userName = name.userName
-            updateUserName(true)
-        }else{
-            updateUserName(false)
-        }
-    });
-
-    chrome.storage.sync.get(["measureUnit"]).then((unit) => {
-        if(unit.measureUnit !== undefined){
-            updateMeasureUnit(unit.measureUnit, true)
-        }else{
-            updateMeasureUnit("Metric", false)
-        }
-    });
-
-    chrome.storage.sync.get(["language"]).then((language) => {
-        if(language.language !== undefined){
-            updateLanguage(language.language, true)
-        }else{
-            updateLanguage("English", false)
-        }
-    });
 }
 
 function toggleSettings(){
@@ -530,7 +597,7 @@ function updateUserName(sync){
 //---SETTINGS_LANGUAGE---///////////////////////////////////////////////////////////////////////////////////////////////
 let selectedLanguage = "English"
 let languageCode = "en"
-function updateLanguage(language, sync){
+function updateLanguage(language, sync, onload){
     if(language === "English" || language === "Englisch"){
         selectedLanguage = "English"
         languageCode = "en"
@@ -550,7 +617,7 @@ function updateLanguage(language, sync){
     
     updateSearchBarPlaceholder()
     updateSettingsLanguage(selectedLanguage)
-    updateWeatherInfo()
+    if(!onload) updateWeatherInfo()
 }
 
 async function updateSettingsLanguage(language){
@@ -599,7 +666,7 @@ async function updateSettingsLanguage(language){
 let measureUnit = "Metric"
 let temperatureUnit = "°C"
 let speedUnit = "m/s"
-function updateMeasureUnit(unit, sync){
+function updateMeasureUnit(unit, sync, onload){
     if(unit === "Metric" || unit === "Metrisch"){
         measureUnit = "Metric"
         temperatureUnit = "°C"
@@ -619,7 +686,7 @@ function updateMeasureUnit(unit, sync){
     let selectedButton = document.getElementById(`measureUnit${measureUnit}`)
     selectedButton.setAttribute("state","active")
     
-    updateWeatherInfo()
+    if(!onload) updateWeatherInfo()
 }
 
 
