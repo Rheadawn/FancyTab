@@ -242,7 +242,7 @@ div.shortcutBackground{
     width: 100%;
 }
 
-.settingsButtons button[state="active"]{
+.settingsButtons button[data-state="active"]{
     color: black;
 }
 
@@ -250,7 +250,7 @@ div.shortcutBackground{
     color: rgba(255,255,255,50%);
 }
 
-#colorScheme .settingsButtons button[state="active"]{
+#colorScheme .settingsButtons button[data-state="active"]{
     color: white;
 }
 
@@ -287,7 +287,7 @@ div.shortcutBackground{
     padding-right: 11px;
 }
 
-.settingsSearchEngines img[state="active"]{
+.settingsSearchEngines img[data-state="active"]{
     opacity: 100%;
 }
 
@@ -347,6 +347,19 @@ div.shortcutBackground{
 
 input:active,input:focus{
     outline: none;
+}
+
+.visually-hidden {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px);
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
 

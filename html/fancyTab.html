@@ -62,7 +62,7 @@
             <div id="language" class="settingsContainer">
                 <p id="languageText" class="text settingsTexts">Language:</p>
                 <div class="settingsButtons">
-                    <button id="languageButtonEnglish" state="active">
+                    <button id="languageButtonEnglish" data-state="active">
                         English
                     </button>
                     <button id="languageButtonGerman">
@@ -73,7 +73,7 @@
             <div id="measureUnit" class="settingsContainer">
                 <p id="measureUnitText" class="text settingsTexts">Measure Unit:</p>
                 <div class="settingsButtons">
-                    <button id="measureUnitMetric" state="active">
+                    <button id="measureUnitMetric" data-state="active">
                         Metric
                     </button>
                     <button id="measureUnitImperial">
@@ -87,7 +87,7 @@
                     <button id="colorSchemeBlue" style="background: #033D6B;">
                         Blue
                     </button>
-                    <button id="colorSchemeViolet" style="background: #370140;" state="active">
+                    <button id="colorSchemeViolet" style="background: #370140;" data-state="active">
                         Violet
                     </button>
                     <button id="colorSchemeGreen" style="background: #345502;">
@@ -101,7 +101,7 @@
             <div id="searchEngine" class="settingsContainer">
                 <p id="searchEngineText" class="text settingsTexts">Search Engine:</p>
                 <div class="settingsSearchEngines">
-                    <img id="google" alt="Icon of Google" src="../images/googleIcon.svg" state="active">
+                    <img id="google" alt="Icon of Google" src="../images/googleIcon.svg" data-state="active">
                     <img id="ecosia" alt="Icon of Ecosia" src="../images/ecosiaIcon.svg">
                     <img id="duckDuckGo" alt="Icon of DuckDuckGo" src="../images/duckDuckGoIcon.svg">
                     <img id="bing" alt="Icon of Bing" src="../images/bingIcon.svg">
@@ -111,6 +111,7 @@
         <p id="date" class="text">01.03.2024</p>
         <div id="searchBar">
             <input id="searchBarField" type="search" placeholder="Good Morning, Human. Ready to search the world?" autocomplete="off">
+            <label for="searchBarField" class="visually-hidden">Searchbar field</label>
             <button id="searchBarButton">
                 <img id="searchBarIcon" alt="Icon of the search bar" src="../images/searchBarIcon.svg"/>
             </button>
@@ -159,7 +160,7 @@
                 </div>
             </div>
         </div>
-        <img alt="seperating line" src="../images/weatherColumnSeperator.svg"/>
+        <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
         <div class="simpleWeatherColumn">
             <div class="weatherColumnDiv">
                 <svg id="windDirectionIcon" width="60" height="60" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,7 +173,7 @@
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M32.5097 35L37.4799 35C37.4799 36.3944 36.3673 37.5247 34.9948 37.5247C33.6223 37.5247 32.5097 36.3944 32.5097 35Z" fill="white"/>
                     <defs>
                         <linearGradient id="paint0_linear_30_26" x1="35.0047" y1="20.1984" x2="35.0047" y2="35" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="0" stop-color="var(--secondaryColor)"/>
                             <stop offset="1" stop-color= "#1A011E"/>
                         </linearGradient>
                     </defs>
@@ -188,7 +189,7 @@
                 </p>
             </div>
         </div>
-        <img alt="seperating line" src="../images/weatherColumnSeperator.svg"/>
+        <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
         <div class="simpleWeatherColumn">
             <div class="weatherColumnDiv">
                 <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -200,15 +201,15 @@
                     <path d="M25.3109 1.27513L25 1.02817L24.689 1.27513C22.274 3.19318 20.4466 4.99277 19.2269 6.67529C18.0087 8.35565 17.3571 9.96778 17.3571 11.5C17.3571 13.576 18.0902 15.3328 19.5535 16.7359C21.0161 18.1383 22.8437 18.8333 25 18.8333C27.1562 18.8333 28.9838 18.1383 30.4465 16.7359C31.9098 15.3328 32.6428 13.576 32.6428 11.5C32.6428 9.96778 31.9912 8.35565 30.7731 6.67529C29.5534 4.99277 27.726 3.19318 25.3109 1.27513ZM27.8396 14.2699C27.6762 14.4224 27.4837 14.5 27.2321 14.5C26.9805 14.5 26.788 14.4224 26.6246 14.2699C26.4625 14.1186 26.3928 13.9546 26.3928 13.75C26.3928 13.5454 26.4625 13.3814 26.6246 13.2301C26.788 13.0776 26.9805 13 27.2321 13C27.4837 13 27.6762 13.0776 27.8396 13.2301C28.0017 13.3814 28.0714 13.5454 28.0714 13.75C28.0714 13.9546 28.0017 14.1186 27.8396 14.2699ZM27.2768 9.05895L27.794 9.54167L22.7232 14.2744L22.206 13.7917L27.2768 9.05895ZM23.3753 10.1032C23.2119 10.2557 23.0194 10.3333 22.7678 10.3333C22.5163 10.3333 22.3237 10.2557 22.1603 10.1032C21.9983 9.95196 21.9285 9.78796 21.9285 9.58334C21.9285 9.37872 21.9983 9.21472 22.1603 9.06345C22.3237 8.91094 22.5163 8.83334 22.7678 8.83334C23.0194 8.83334 23.2119 8.91094 23.3753 9.06345C23.5374 9.21472 23.6071 9.37872 23.6071 9.58334C23.6071 9.78796 23.5374 9.95196 23.3753 10.1032Z" fill="white" stroke="black"/>
                     <defs>
                         <linearGradient id="paint0_linear_30_37" x1="21" y1="35" x2="21" y2="50" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="0" stop-color="var(--secondaryColor)"/>
                             <stop offset="1" stop-color="#1A011E"/>
                         </linearGradient>
                         <linearGradient id="paint1_linear_30_37" x1="45.5" y1="17" x2="45.5" y2="27" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="0"  stop-color="var(--secondaryColor)"/>
                             <stop offset="1" stop-color="#1A011E"/>
                         </linearGradient>
                         <linearGradient id="paint2_linear_30_37" x1="24.5" y1="8" x2="24.5" y2="15" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="0"  stop-color="var(--secondaryColor)"/>
                             <stop offset="1" stop-color="#1A011E"/>
                         </linearGradient>
                     </defs>
@@ -225,15 +226,15 @@
                     <path d="M32.8061 7.49027L33.1004 7.42445L33.1795 7.13345C33.6366 5.45135 34.5453 4.09857 35.9133 3.05892C37.2823 2.01842 38.827 1.5 40.5641 1.5C42.7065 1.5 44.5066 2.24047 45.9944 3.72826C47.4821 5.21605 48.2226 7.01614 48.2226 9.15851V9.60389L48.665 9.65518C49.8843 9.79655 50.8829 10.3164 51.6842 11.2232C52.4869 12.1318 52.8846 13.1843 52.8846 14.4033C52.8846 15.729 52.4263 16.8398 51.5013 17.7647C50.5764 18.6897 49.4656 19.148 48.1399 19.148H34.1538C32.5154 19.148 31.1309 18.5863 29.9723 17.4547C28.8167 16.326 28.2436 14.9596 28.2436 13.3252C28.2436 11.9189 28.6645 10.6765 29.5091 9.58023C30.3499 8.48903 31.4425 7.7953 32.8061 7.49027Z" fill="url(#paint2_linear_30_51)" stroke="black"/>
                     <defs>
                         <linearGradient id="paint0_linear_30_51" x1="11.2564" y1="14.3333" x2="11.2564" y2="29.2517" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="0" stop-color="var(--secondaryColor)"/>
                             <stop offset="1" stop-color="#1A011E"/>
                         </linearGradient>
                         <linearGradient id="paint1_linear_30_51" x1="36.4615" y1="24.5898" x2="36.4615" y2="35.7786" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="0" stop-color="var(--secondaryColor)"/>
                             <stop offset="1" stop-color="#1A011E"/>
                         </linearGradient>
                         <linearGradient id="paint2_linear_30_51" x1="40.5641" y1="1" x2="40.5641" y2="19.648" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="var(--secondaryColor)"/>
+                            <stop offset="0" stop-color="var(--secondaryColor)"/>
                             <stop offset="1" stop-color="#1A011E"/>
                         </linearGradient>
                     </defs>
@@ -243,7 +244,7 @@
                 </p>
             </div>
         </div>
-        <img alt="seperating line" src="../images/weatherColumnSeperator.svg"/>
+        <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
         <div id="forecastColumn">
             <p id="forecastText" class="text">5-DAY FORECAST</p>
             <div id="forecastDays">
@@ -284,7 +285,7 @@
                 </div>
             </div>
         </div>
-        <img alt="seperating line" src="../images/weatherColumnSeperator.svg"/>
+        <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
         <div id="dayCycleColumn">
             <p id="dayCycleText" class="text">DAY CYCLE</p>
             <div id="dayCycleImage">

@@ -642,9 +642,9 @@ function updateLanguage(language, sync, onload){
     }
 
     let buttons = document.querySelectorAll("#language button")
-    buttons.forEach((element, index) => {element.setAttribute("state","inactive")})
+    buttons.forEach((element) => {element.dataset.state = "inactive"})
     let selectedButton = document.getElementById(`languageButton${selectedLanguage}`)
-    selectedButton.setAttribute("state","active")
+    selectedButton.dataset.state = "active"
     
     updateSearchBarPlaceholder()
     updateSettingsLanguage(selectedLanguage)
@@ -713,9 +713,9 @@ function updateMeasureUnit(unit, sync, onload){
     }
     
     let buttons = document.querySelectorAll("#measureUnit button")
-    buttons.forEach((element, index) => {element.setAttribute("state","inactive")})
+    buttons.forEach((element) => {element.dataset.state = "inactive"})
     let selectedButton = document.getElementById(`measureUnit${measureUnit}`)
-    selectedButton.setAttribute("state","active")
+    selectedButton.dataset.state = "active"
     
     if(!onload) updateWeatherInfo()
 }
@@ -740,9 +740,9 @@ function updateColorScheme(color, sync){
     }
     
     let buttons = document.querySelectorAll("#colorScheme button")
-    buttons.forEach((element, index) => {element.setAttribute("state","inactive")})
+    buttons.forEach((element, index) => {element.dataset.state = "inactive"})
     let selectedButton = document.getElementById(`colorScheme${currentColor}`)
-    selectedButton.setAttribute("state","active")
+    selectedButton.dataset.state = "active"
     
     setColor(currentColor)
 }
@@ -780,9 +780,9 @@ function updateSearchEngine(engine, sync){
         chrome.storage.sync.set({ "searchEngine": engine }).then(() => {});
     }
     let images = document.querySelectorAll("#searchEngine img")
-    images.forEach((element, index) => {element.setAttribute("state","inactive")})
+    images.forEach((element, index) => {element.dataset.state = "inactive"})
     let selectedEngine = document.getElementById(engine)
-    selectedEngine.setAttribute("state","active")
+    selectedEngine.dataset.state = "active"
     
     searchEngine = engine;
 }
