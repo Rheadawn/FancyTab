@@ -40,8 +40,9 @@ function setEventListeners(){
         document.getElementById("refreshButton").src = refreshBackgroundImageOn? "../images/imageRefreshOn.svg" : "../images/imageRefreshOff.svg"
         if (refreshBackgroundImageOn){
             let image = document.getElementById("backgroundImage")
-            image.style.backgroundImage = `url(${await fetchRandomImage()})`
-            fetchRandomImage()
+            await fetchRandomImage()
+            await loadImageFromDB()
+            await fetchRandomImage()
         } 
         if (currentBackgroundImage) saveImageToDB(currentBackgroundImage)
     })
@@ -67,23 +68,30 @@ function setEventListeners(){
     shortcuts.forEach((element, index) => {element.addEventListener("click",(event) => {window.open(shortcutURL[index], window.name)})})
     shortcuts.forEach((element, index) => {element.addEventListener("contextmenu",(event) => {
         event.preventDefault()
+        document.getElementById("shortcutImageInput").value = ""
         if(settingsActive) toggleSettings()
         let dialog = document.getElementById("shortcutDialog")
-        dialog.open && (selectedShortcutIndex === index)? dialog.close() : dialog.show()
+        if(dialog.open && selectedShortcutIndex === index){
+            dialog.close()
+        }else{
+            dialog.show()
+        }
         selectedShortcutIndex = index
         document.getElementById("shortcutURLInput").value = shortcutURL[index]
     })})
     document.getElementById("shortcutURLInput").addEventListener("change", (event) => {
         if(event.target.checkValidity()){
             shortcutURL[selectedShortcutIndex] = event.target.value
-            chrome.storage.local.set({ "shortcutURL": JSON.stringify(shortcutURL) }).then(() => {});
+            chrome.storage.local.set({ "shortcutURL": shortcutURL }).then(() => {});
         }
     })
     document.getElementById("shortcutImageInput").addEventListener("change", async (event) => {
-        let imageBase64 = await imageToBase64(event.target.files[0])
-        shortcutImage[selectedShortcutIndex] = imageBase64
-        shortcuts[selectedShortcutIndex].style.backgroundImage = `url(${imageBase64})`
-        chrome.storage.local.set({ "shortcutImage": JSON.stringify(shortcutImage) }).then(() => {});
+        if(event.target.files[0].type.startsWith("image/")){
+            let imageBase64 = await imageToBase64(event.target.files[0])
+            shortcutImage[selectedShortcutIndex] = imageBase64
+            shortcuts[selectedShortcutIndex].style.backgroundImage = `url(${imageBase64})`
+            chrome.storage.local.set({ "shortcutImage": shortcutImage }).then(() => {});
+        }
     })
     
     //Event Listener for changes to chrome SYNC STORAGE
@@ -147,7 +155,12 @@ function loadImageFromDB(){
     }
     
     request.onsuccess = (event) => {
-        (request.result === undefined)? setDefaultImage() : image.style.backgroundImage = `url(${URL.createObjectURL(request.result)})`
+        if(request.result === undefined) {
+            setDefaultImage()
+        }else{
+            let imageObjectURL = URL.createObjectURL(request.result)
+            image.style.backgroundImage = `url(${imageObjectURL})`
+        }
         currentBackgroundImage = request.result
         if(refreshBackgroundImageOn){
             fetchRandomImage()
@@ -156,10 +169,14 @@ function loadImageFromDB(){
 }
 
 function saveImageToDB(blob){
-    let transaction = db.transaction(["images"], "readwrite");
-    let imageStore = transaction.objectStore("images");
-
-    imageStore.put(blob, "image")
+    return new Promise((resolve, reject) => {
+        let transaction = db.transaction(["images"], "readwrite");
+        let imageStore = transaction.objectStore("images");
+        let request = imageStore.put(blob, "image")
+        
+        request.onsuccess = resolve
+        request.onerror = reject
+    })
 }
 
 
@@ -174,18 +191,16 @@ async function fetchRandomImage(){
     let credentials = await getCredentials()
     let imageResponse = await (await fetch(`https://api.unsplash.com/photos/random?client_id=${credentials.imageAPI.accessKey}&orientation=landscape&query=wallpaper,nature,animals`)).json()
     let imageURL = imageResponse.urls.raw + "&w=1920&h=1080";
-    imageURLToBlobAndSave(imageURL)
+    await imageURLToBlobAndSave(imageURL)
     return imageURL
 }
 
-function imageURLToBlobAndSave(src) {
-    fetch(src)
-        .then(response => response.blob())
-        .then(blob => {
-            const reader = new FileReader()
-            reader.readAsDataURL(blob)
-            saveImageToDB(blob)
-        })
+async function imageURLToBlobAndSave(src) {
+    let response = await fetch(src)
+    let blob = await response.blob()
+    const reader = new FileReader()
+    reader.readAsDataURL(blob)
+    await saveImageToDB(blob)
 }
 
 function updateImageColor(){
@@ -448,14 +463,14 @@ function updateSearchBarPlaceholder(){
             case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = `Good Morning, ${userName}. Ready to search the world?`;
             case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = `Good Afternoon, ${userName}. Ready to search the world?`;
             case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = `Good Evening, ${userName}. Ready to search the world?`;
-            case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = `Get some sleep, ${userName}. There's still tomorrow to explore the world.`;
+            case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = `Get some sleep, ${userName}.`;
         }
     }else{
         switch(true){
             case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = `Guten Morgen, ${userName}. Bereit, die Welt zu erkunden?`;
             case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = `Guten Nachmittag, ${userName}. Bereit, die Welt zu erkunden?`;
             case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = `Guten Abend, ${userName}. Bereit, die Welt zu erkunden?`;
-            case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = `Ruhe dich aus, ${userName}. Du kannst auch morgen die Welt erkunden.`;
+            case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = `Ruhe dich aus, ${userName}.`;
         }
     }
 }
@@ -478,8 +493,8 @@ function searchBarOnClick(){
 
 //---SETTINGS_GENERAL---////////////////////////////////////////////////////////////////////////////////////////////////
 let settingsActive = false;
-let syncSettingsKeys = ["colorOn", "shortcutURL", "colorScheme", "searchEngine", "userName", "measureUnit", "language"]
-let localSettingsKeys = ["refreshBackgroundImageOn", "shortcutImage"]
+let syncSettingsKeys = ["colorOn", "colorScheme", "searchEngine", "userName", "measureUnit", "language"]
+let localSettingsKeys = ["refreshBackgroundImageOn"]
 
 async function initiateSettings(){
     for(let i=0; i < syncSettingsKeys.length; i++){
@@ -492,6 +507,12 @@ async function initiateSettings(){
         let result = await chrome.storage.local.get([key])
         if(!result) await chrome.storage.local.set({key: undefined})
     }
+
+    let shortcutImageResult = await chrome.storage.local.get(["shortcutImage"])
+    if(Object.keys(shortcutImageResult).length === 0) await chrome.storage.local.set({"shortcutImage": shortcutImage})
+    
+    let shortcutURLResult = await chrome.storage.local.get(["shortcutURL"])
+    if(Object.keys(shortcutURLResult).length === 0) await chrome.storage.local.set({"shortcutURL": shortcutURL})
 }
 
 async function setSavedSettings(onload, changes){
@@ -500,10 +521,9 @@ async function setSavedSettings(onload, changes){
         let value = settings[key]
         switch(key){
             case "colorOn": return updateColorOn(value)
-            case "shortcutURL": if(value) shortcutURL = JSON.parse(value); return
             case "colorScheme": return value? updateColorScheme(value, true) : updateColorScheme("colorSchemeViolet", false)
             case "searchEngine": return value?  updateSearchEngine(value, true) : updateSearchEngine("google", false)
-            case "userName": return value? updateUserNameValue(value) : updateUserName(false)
+            case "userName": return value? updateUserNameValue(value) : updateUserName(true)
             case "measureUnit": return value? updateMeasureUnit(value, true, onload) : updateMeasureUnit("Metric", false, onload)
             case "language": return value? updateLanguage(value, true, onload) : updateLanguage("English", false, onload)
         }
@@ -516,6 +536,7 @@ async function setSavedSettings(onload, changes){
         switch(key){
             case "refreshBackgroundImageOn": return updateRefreshBackgroundImageOn(value)
             case "shortcutImage": return updateShortcutImage(value)
+            case "shortcutURL": return updateShortcutURL(value)
             case "lastWeatherInfo": return updateWeatherInfo()
             case "lastWeatherForecast": return updateWeatherInfo()
         }
@@ -555,17 +576,17 @@ function updateRefreshBackgroundImageOn(backgroundImageOnValue){
 }
 
 function updateShortcutImage(shortcutImageValue){
-    if(shortcutImageValue){
-        let newShortcutImage = JSON.parse(shortcutImageValue)
-        newShortcutImage.forEach((element, index) => {
-            if(element !== "") shortcutImage[index] = element
-        })
-    }
+    shortcutImage = shortcutImageValue
 
     let shortcuts = document.querySelectorAll("div.shortcutImage")
     shortcutImage.forEach((element, index) => {
         shortcuts[index].style.backgroundImage = `url(${element})`
     })
+}
+
+function updateShortcutURL(shortcutURLValue){
+    shortcutURL = shortcutURLValue
+    document.getElementById("shortcutURLInput").value = shortcutURL[selectedShortcutIndex]
 }
 
 function toggleSettings(){
@@ -579,11 +600,11 @@ function toggleSettings(){
 
 
 //---SETTINGS_USER_NAME---//////////////////////////////////////////////////////////////////////////////////////////////
-let userName = "Fellow Human"
+let userName = "Human"
 function updateUserName(sync){
     let userNameInput = document.getElementById("userNameInput")
     if(!sync){
-        userName = (userNameInput.value !== "")? userNameInput.value : userName
+        userName = (userNameInput.value !== "" && userNameInput.checkValidity())? userNameInput.value : userName
         chrome.storage.sync.set({ "userName": userName }).then(() => {});
     }
     
@@ -601,9 +622,19 @@ function updateLanguage(language, sync, onload){
     if(language === "English" || language === "Englisch"){
         selectedLanguage = "English"
         languageCode = "en"
+        if(userName === "Fremder"){
+            userName = "Human"
+            document.getElementById("userNameInput").value = "Human"
+            updateUserName(sync)
+        } 
     }else{
         selectedLanguage = "German"
         languageCode = "de"
+        if(userName === "Human"){
+            userName = "Fremder"
+            document.getElementById("userNameInput").value = "Fremder"
+            updateUserName(sync)
+        } 
     }
     
     if(!sync){
