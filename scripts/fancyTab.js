@@ -8,7 +8,7 @@ async function loadWindow(){
     setEventListeners()
     updateClock()
     updateSearchBar()
-    updateWeatherInfo()
+    await updateWeatherInfo()
     setInterval(function(){updateClock(); updateSearchBar()}, 500) //update clock and searchbar every 0.5 seconds
     setInterval(updateWeatherInfo, 1000*60*10) //update weather info every 10 minutes
 }
@@ -25,47 +25,46 @@ let selectedShortcutIndex;
 
 function setEventListeners(){
     //Event Listener for the POWER BUTTON
-    document.getElementById("powerButton").addEventListener("click", (event) => {window.close()})
+    document.getElementById("powerButton").addEventListener("click", () => {window.close()})
 
     //Event Listeners for everything BACKGROUND IMAGE related
-    document.getElementById("colorButton").addEventListener("click", (event) => {
+    document.getElementById("colorButton").addEventListener("click", () => {
         colorOn = !colorOn
         chrome.storage.sync.set({ "colorOn": colorOn }).then(() => {});
         document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
         updateImageColor()
     })
-    document.getElementById("refreshButton").addEventListener("click", async (event) => {
+    document.getElementById("refreshButton").addEventListener("click", async () => {
         refreshBackgroundImageOn = !refreshBackgroundImageOn
         chrome.storage.local.set({ "refreshBackgroundImageOn": refreshBackgroundImageOn }).then(() => {});
         document.getElementById("refreshButton").src = refreshBackgroundImageOn? "../images/imageRefreshOn.svg" : "../images/imageRefreshOff.svg"
         if (refreshBackgroundImageOn){
-            let image = document.getElementById("backgroundImage")
             await fetchRandomImage()
             await loadImageFromDB()
             await fetchRandomImage()
         } 
-        if (currentBackgroundImage) saveImageToDB(currentBackgroundImage)
+        if (currentBackgroundImage) await saveImageToDB(currentBackgroundImage)
     })
     
     //Event Listeners for everything SEARCH BAR related
-    document.getElementById("searchBarButton").addEventListener("click", (event) => {searchBarOnClick()})
+    document.getElementById("searchBarButton").addEventListener("click", () => {searchBarOnClick()})
     document.getElementById("searchBarField").addEventListener("keydown", (event) => {if(event.key === "Enter"){searchBarOnClick()}})
 
     //Event Listeners for everything SETTINGS related
-    document.getElementById("settingsIcon").addEventListener("click", (event) => {toggleSettings()})
-    document.getElementById("userNameInput").addEventListener("change", (event) => {updateUserName(false)})
+    document.getElementById("settingsIcon").addEventListener("click", () => {toggleSettings()})
+    document.getElementById("userNameInput").addEventListener("change", () => {updateUserName(false)})
     let languageButtons = document.querySelectorAll("#language button")
-    languageButtons.forEach((element, index) => {element.addEventListener("click", (event) => {updateLanguage(element.innerText, false)})})
+    languageButtons.forEach((element) => {element.addEventListener("click", () => {updateLanguage(element.innerText, false)})})
     let unitMeasureButtons = document.querySelectorAll("#measureUnit button")
-    unitMeasureButtons.forEach((element, index) => {element.addEventListener("click", (event) => {updateMeasureUnit(element.innerText, false)})})
+    unitMeasureButtons.forEach((element) => {element.addEventListener("click", () => {updateMeasureUnit(element.innerText, false)})})
     let colorSchemeButtons = document.querySelectorAll("#colorScheme button")
-    colorSchemeButtons.forEach((element, index) => {element.addEventListener("click", (event) => {updateColorScheme(element.innerText, false)})})
+    colorSchemeButtons.forEach((element) => {element.addEventListener("click", () => {updateColorScheme(element.innerText, false)})})
     let searchEngineImages = document.querySelectorAll("#searchEngine img")
-    searchEngineImages.forEach((element, index) => {element.addEventListener("click", (event) => {updateSearchEngine(element.id, false)})})
+    searchEngineImages.forEach((element) => {element.addEventListener("click", () => {updateSearchEngine(element.id, false)})})
     
     //Event Listeners for everything SHORTCUT related
     let shortcuts = document.querySelectorAll("div.shortcutImage")
-    shortcuts.forEach((element, index) => {element.addEventListener("click",(event) => {window.open(shortcutURL[index], window.name)})})
+    shortcuts.forEach((element, index) => {element.addEventListener("click",() => {window.open(shortcutURL[index], window.name)})})
     shortcuts.forEach((element, index) => {element.addEventListener("contextmenu",(event) => {
         event.preventDefault()
         document.getElementById("shortcutImageInput").value = ""
@@ -95,7 +94,7 @@ function setEventListeners(){
     })
     
     //Event Listener for changes to chrome SYNC STORAGE
-    chrome.storage.onChanged.addListener((changes) => {setSavedSettings(false, changes)})
+    chrome.storage.onChanged.addListener((changes) => {setSavedSettings(false, changes).then()})
 }
 
 
@@ -147,14 +146,14 @@ function loadImageFromDB(){
     let request = imageStore.get("image")
     let image = document.getElementById("backgroundImage")
     
-    request.onerror = (event) => {
+    request.onerror = () => {
         setDefaultImage()
         if(refreshBackgroundImageOn){
-            fetchRandomImage()
+            fetchRandomImage().then()
         }
     }
     
-    request.onsuccess = (event) => {
+    request.onsuccess = () => {
         if(request.result === undefined) {
             setDefaultImage()
         }else{
@@ -163,7 +162,7 @@ function loadImageFromDB(){
         }
         currentBackgroundImage = request.result
         if(refreshBackgroundImageOn){
-            fetchRandomImage()
+            fetchRandomImage().then()
         }
     }
 }
@@ -647,8 +646,8 @@ function updateLanguage(language, sync, onload){
     selectedButton.dataset.state = "active"
     
     updateSearchBarPlaceholder()
-    updateSettingsLanguage(selectedLanguage)
-    if(!onload) updateWeatherInfo()
+    updateSettingsLanguage(selectedLanguage).then()
+    if(!onload) updateWeatherInfo().then()
 }
 
 async function updateSettingsLanguage(language){
@@ -717,7 +716,7 @@ function updateMeasureUnit(unit, sync, onload){
     let selectedButton = document.getElementById(`measureUnit${measureUnit}`)
     selectedButton.dataset.state = "active"
     
-    if(!onload) updateWeatherInfo()
+    if(!onload) updateWeatherInfo().then()
 }
 
 
@@ -740,7 +739,7 @@ function updateColorScheme(color, sync){
     }
     
     let buttons = document.querySelectorAll("#colorScheme button")
-    buttons.forEach((element, index) => {element.dataset.state = "inactive"})
+    buttons.forEach((element) => {element.dataset.state = "inactive"})
     let selectedButton = document.getElementById(`colorScheme${currentColor}`)
     selectedButton.dataset.state = "active"
     
@@ -780,7 +779,7 @@ function updateSearchEngine(engine, sync){
         chrome.storage.sync.set({ "searchEngine": engine }).then(() => {});
     }
     let images = document.querySelectorAll("#searchEngine img")
-    images.forEach((element, index) => {element.dataset.state = "inactive"})
+    images.forEach((element) => {element.dataset.state = "inactive"})
     let selectedEngine = document.getElementById(engine)
     selectedEngine.dataset.state = "active"
     

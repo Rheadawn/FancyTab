@@ -601,7 +601,7 @@ input:active,input:focus{
 #dayCycleImage{
     position: relative;
     width: 150px;
-    height: 75.5px;
+    height: 75px;
     margin-bottom: -15px;
     padding: 15px;
 }
