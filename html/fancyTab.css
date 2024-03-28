@@ -6,15 +6,45 @@
     --secondaryColor: #720484;
 }
 
-body {
+.flex{
+    position: relative;
     display: flex;
-    flex-direction: column; /* Items stacked vertically */
-    align-items: center;  /* Items centered horizontally */
-    width: 100vw;
-    height: 100vh;
-    margin: 0; /* Removes scroll bars */
-    overflow: hidden;
-    background-color: black;
+}
+
+.pos-abs{
+    position: absolute;
+}
+
+.pos-rel{
+    position: relative;
+}
+
+.column{
+    flex-direction: column;
+}
+
+.row{
+    flex-direction: row;
+}
+
+.align-center{
+    align-items: center; /* Items get centered along the axis orthogonal to the flex-direction */
+}
+
+.align-flex-start{
+    align-items: flex-start;
+}
+
+.justify-center{
+    justify-content: center; /* Items get centered along the flex-direction */
+}
+
+.justify-space-between{
+    justify-content: space-between;
+}
+
+.justify-flex-start{
+    justify-content: flex-start;
 }
 
 .text{
@@ -30,12 +60,67 @@ body {
     line-height: 0.75;
 }
 
+.regular{
+    font-weight: 400;
+}
+
+.medium{
+    font-weight: 500;
+}
+
+.size-128{
+    font-size: 128px;
+}
+
+.size-32{
+    font-size: 32px;
+}
+
+.size-24{
+    font-size: 24px;
+}
+
+.size-20{
+    font-size: 20px;
+}
+
+.size-16{
+    font-size: 16px;
+}
+
+.size-10{
+    font-size: 10px;
+}
+
+.square-75x75{
+    width: 75px;
+    height: 75px;
+}
+
+.square-60x60{
+    width: 60px;
+    height: 60px;
+}
+
+.square-50x50{
+    width: 50px;
+    height: 50px;
+}
+
+.square-40x40{
+    width: 40px;
+    height: 40px;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: black;
+}
+
 #dashboard{
-    position: relative; /* Needed for margin-top to work */
-    margin-top: 50px;  /* Specific Y value for positioning */
-    display: flex;
-    flex-direction: column; /* Items stacked vertically */
-    align-items: center;  /* Items centered horizontally */
+    margin-top: 50px;
 }
 
 
@@ -44,45 +129,23 @@ body {
 /// BACKGROUND_AND_BUTTONS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
  */
 #backgroundImage{
-    background-size: cover; /* Lets image cover whole screen */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: scroll; /* Image will stay on screen while scrolling */
     width: 100vw;
     height: 100vh;
-    margin: 0; /* Removes scroll bars */
-    position: absolute;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #backgroundImageButtons{
-    position: absolute;
     z-index: 1;
     right: 10px;
-    top: 0;
-    display: flex;
-    flex-direction: row;
     justify-content: right;
-    align-items: center;
     gap: 10px;
 }
 
-#colorButton{
-    width: 50px;
-    height: 50px;
-}
-
-#refreshButton{
-    width: 40px;
-    height: 40px;
-}
-
 #powerButton{
-    position: absolute;
     z-index: 1;
     left: 0;
-    top: 0;
-    width: 50px;
-    height: 50px;
 }
 
 
@@ -90,20 +153,12 @@ body {
 /*
 /// DATE ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
  */
-#time {
-    font-size: 128px;
-    font-weight: 400;
-}
-
 #day{
     font-size: 40px;
-    font-weight: 500;
     margin-top: 15px;
 }
 
 #date{
-    font-size: 32px;
-    font-weight: 500;
     margin-top: 26px;
 }
 
@@ -113,26 +168,14 @@ body {
 /// SHORTCUTS //////////////////////////////////////////////////////////////////////////////////////////////////////////
  */
 #shortcuts{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     margin-top: -60px;
 }
 
 #upperShortcuts{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     width: 500px;
 }
 
 #lowerShortcuts{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     width: 350px;
 }
 
@@ -143,7 +186,6 @@ body {
     left: calc(50% - 239px);
     top: 45%;
     flex-direction: column;
-    align-items: center;
     gap: 10px;
     border-radius: 30px;
     width: 440px;
@@ -159,10 +201,8 @@ body {
     width: 300px;
 }
 
-div.shortcutImage{
+.shortcutImage{
     background-size: 40%;
-    width: 75px;
-    height: 75px;
     cursor: pointer;
     transition: 200ms ease-in-out scale;
     background-repeat: no-repeat;
@@ -173,12 +213,8 @@ div.shortcutImage:hover{
     scale: 1.1;
 }
 
-div.shortcutBackground{
+.shortcutBackground{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 75px;
-    height: 75px;
     background-image: url(../images/shortcutBackground.svg);
     background-repeat: no-repeat;
 }
@@ -189,10 +225,6 @@ div.shortcutBackground{
 /// SETTINGS ///////////////////////////////////////////////////////////////////////////////////////////////////////////
  */
 #settings{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     gap: 10px;
     margin-top: 60px;
     border-radius: 30px;
@@ -203,20 +235,14 @@ div.shortcutBackground{
 }
 
 .settingsContainer{
-    position: relative;
-    display: flex;
     width: 100%;
     height: 25px;
-    flex-direction: row;
-    align-items: center;
     gap: 60px;
 }
 
 .settingsTexts{
-    position: relative;
     width: 140px;
     min-width: 140px;
-    font-size: 20px;
 }
 
 .settingsButtons button{
@@ -224,20 +250,12 @@ div.shortcutBackground{
     height: 25px;
     border-radius: 30px;
     border: none;
-    font-family: "Jost", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 0.75;
     background: rgba(255,255,255,90%);
     color: rgba(0,0,0,50%);
+    text-shadow: none;
 }
 
 .settingsButtons{
-    position: relative;
-    display: flex;
-    flex-direction: row;
     gap: 6px;
     width: 100%;
 }
@@ -255,25 +273,17 @@ div.shortcutBackground{
 }
 
 .inputField{
-    position: relative;
     width: 240px;
     height: 25px;
-    font-size: 16px;
-    font-family: "Jost", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    font-weight: 500;
     text-align: center;
-    line-height: 0.75;
     border-radius: 30px;
     border: none;
     background: rgba(255,255,255,90%);
+    text-shadow: none;
+    color: black;
 }
 
 .settingsSearchEngines{
-    position: relative;
-    display: flex;
-    flex-direction: row;
     width: 100%;
     gap: 6px;
 }
@@ -297,15 +307,10 @@ div.shortcutBackground{
 /// SEARCH_BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////
  */
 #searchBar{
-    position: relative;
     margin-top: 16px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
 }
 
 #searchBarField{
-    position: relative;
     width: 800px;
     height: 50px;
     padding: 0;
@@ -314,11 +319,7 @@ div.shortcutBackground{
     background-color: rgba(0,0,0,0.75);
     color: rgba(255,255,255,0.5);
     text-align: center;
-    font-size: 20px;
-    font-weight: 500;
-    font-family: "Jost", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
+    text-shadow: none;
 }
 
 #searchBarButton{
@@ -340,26 +341,11 @@ div.shortcutBackground{
 }
 
 #settingsIcon{
-    width: 40px;
-    height: 40px;
     margin-left: 20px;
 }
 
 input:active,input:focus{
     outline: none;
-}
-
-.visually-hidden {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    position: absolute !important;
-    height: 1px;
-    width: 1px;
-    overflow: hidden;
-    clip: rect(1px 1px 1px 1px);
-    clip-path: inset(50%);
-    white-space: nowrap;
 }
 
 
@@ -368,54 +354,25 @@ input:active,input:focus{
 /// WEATHER_INFO ///////////////////////////////////////////////////////////////////////////////////////////////////////
  */
 #weatherInfoContainer{
-    position: absolute;
     left: 0;
     bottom: 0;
     width: 100vw;
     height: 200px;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
     background: rgba(0, 0, 0, 0.75) linear-gradient(180deg, color-mix(in srgb, var(--primaryColor), transparent 25%) 0%, rgba(0, 0, 0, 0) 25%);
 }
 
 #temperatureColumn{
-    position: relative;
     height: 140px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
     margin-left: 30px;
     margin-top: 50px;
     gap: 30px;
 }
 
 .temperatureColumnDiv{
-    position: relative;
     height: 135px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-#temperatureColumnDivLeft{
-    align-items: center;
-}
-
-#temperatureColumnDivRight{
-    align-items: flex-start;
-}
-
-#IconAndRainAmount{
-    position: relative;
-    width: 60px;
-    height: 60px;
 }
 
 #weatherIcon{
-    position: absolute;
     left: 0;
     top: 0;
     font-size: 60px;
@@ -423,153 +380,57 @@ input:active,input:focus{
 }
 
 #amountOfRain{
-    position: absolute;
     left: 30px;
     top: 30px;
     transform: translateX(-50%) translateY(-80%);
-    font-size: 16px;
-    font-weight: 500;
     color: var(--primaryColor);
     text-shadow: revert;
 }
 
 #descriptionAndLocation{
-    position: relative;
-    display: flex;
-    flex-direction: column;
     height: 60px;
-    align-items: flex-start;
-    justify-content: center;
     gap: 15px;
 }
 
-#weatherDescription{
-    font-size: 32px;
-    font-weight: 500;
-}
-
-#weatherLocation{
-    font-size: 24px;
-    font-weight: 500;
-}
-
 #minMaxTemp{
-    position: relative;
-    display: flex;
-    flex-direction: column;
     height: 60px;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
 }
 
-.minMaxTempText{
-    font-size: 16px;
-    font-weight: 500;
-}
-
 #tempAndThermometer{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
     gap: -50px;
 }
 
 #actualFeelsLikeTemp{
-    position: relative;
-    display: flex;
-    flex-direction: column;
     height: 60px;
-    align-items: center;
-    justify-content: center;
     gap: 5px;
 }
 
-#actualTemp{
-    font-size: 32px;
-    font-weight: 500;
-}
-
-#feelsLikeTemp{
-    font-size: 10px;
-    font-weight: 500;
-}
-
-#thermometerIcon{
-    width: 60px;
-    height: 60px;
-}
-
 .simpleWeatherColumn{
-    position: relative;
     height: 140px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
     margin-top: 50px;
-}
-
-.weatherColumnDiv{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
     gap: 15px;
 }
 
-.weatherIcon{
-    width: 60px;
-    height: 60px;
-}
-
-.weatherText{
-    font-size: 24px;
-    font-weight: 500;
+.weatherColumnDiv{
+    gap: 15px;
 }
 
 #forecastColumn{
-    position: relative;
     width: 540px;
     height: 140px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
     gap: 30px;
     margin-top: 50px;
 }
 
-#forecastText{
-    font-size: 32px;
-    font-weight: 500;
-}
-
 #forecastDays{
-    position: relative;
     width: 540px;
     height: 90px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: space-around;
 }
 
 .forecastDay{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
     gap: 5px;
-}
-
-.forecastDayName{
-    font-size: 24px;
-    font-weight: 400;
 }
 
 .forecastDayIcon{
@@ -577,29 +438,13 @@ input:active,input:focus{
     color: white;
 }
 
-.forecastDayDescription{
-    font-size: 16px;
-    font-weight: 500;
-}
-
 #dayCycleColumn{
-    position: relative;
     height: 130px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
     margin-top: 50px;
     margin-right: 30px;
 }
 
-#dayCycleText{
-    font-size: 32px;
-    font-weight: 500;
-}
-
 #dayCycleImage{
-    position: relative;
     width: 150px;
     height: 75px;
     margin-bottom: -15px;
@@ -607,11 +452,6 @@ input:active,input:focus{
 }
 
 #dayCycleArch{
-    position: absolute;
     left: 15px;
     top: 15px;
-}
-
-#dayCycleIcon{
-    position: absolute;
 }

@@ -13,94 +13,94 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap">
 </head>
-<body>
-    <img id="powerButton" alt="Button that closes the tab" src="../images/powerButton.svg">
-    <div id="backgroundImageButtons">
-        <img id="colorButton" alt="Button that switches between colorful and greyscale background picture" src="../images/colorOn.svg">
-        <img id="refreshButton" alt="Button that determines if the background image gets reset for every new tab" src="../images/imageRefreshOn.svg">
+<body class="flex column align-center">
+    <img id="powerButton" class="pos-abs square-50x50" alt="Button that closes the tab" src="../images/powerButton.svg">
+    <div id="backgroundImageButtons" class="pos-abs flex row align-center">
+        <img id="colorButton" class="square-50x50" alt="Button that switches between colorful and greyscale background picture" src="../images/colorOn.svg">
+        <img id="refreshButton" class="square-40x40" alt="Button that determines if the background image gets reset for every new tab" src="../images/imageRefreshOn.svg">
     </div>
-    <div id="backgroundImage"></div>
-    <dialog id="shortcutDialog">
-        <div id="shortcutURL" class="settingsContainer" style="gap:10px;">
-            <label id="shortcutURLText" for="shortcutURLInput" class="text settingsTexts">Shortcut URL:</label>
-            <input type="url" required pattern="https?:\/\/\S+\.\S+" id="shortcutURLInput" class="inputField shortcutInputField" name="shortcutURLInput"  placeholder="https://forwards-dev.de/" style="width:270px;"/>
+    <div id="backgroundImage" class="pos-abs"></div>
+    <dialog id="shortcutDialog" class="align-center">
+        <div id="shortcutURL" class="settingsContainer flex row align-center" style="gap:10px;">
+            <label id="shortcutURLText" for="shortcutURLInput" class="pos-rel text medium size-20 settingsTexts">Shortcut URL:</label>
+            <input type="url" required pattern="https?:\/\/\S+\.\S+" id="shortcutURLInput" class="pos-rel inputField text medium size-16 shortcutInputField" name="shortcutURLInput"  placeholder="https://forwards-dev.de/" style="width:270px;"/>
         </div>
-        <div id="shortcutImage" class="settingsContainer" style="gap:10px;">
-            <label id="shortcutImageText" for="shortcutImageInput" class="text settingsTexts">Shortcut File:</label>
-            <input type="file" id="shortcutImageInput" class="inputField shortcutInputField" accept="image/png, image/jpeg, image/svg+xml" style="width:270px;"/>
+        <div id="shortcutImage" class="settingsContainer flex row align-center" style="gap:10px;">
+            <label id="shortcutImageText" for="shortcutImageInput" class="pos-rel text medium size-20 settingsTexts">Shortcut File:</label>
+            <input type="file" id="shortcutImageInput" class="pos-rel inputField text medium size-16 shortcutInputField" accept="image/png, image/jpeg, image/svg+xml" style="width:270px;"/>
         </div>
     </dialog>
-    <div id="dashboard">
-        <div id="time" class="text">12:42</div>
-        <div id="day" class="text">MONDAY</div>
-        <div id="shortcuts">
-            <div id="upperShortcuts">
-                <div class="shortcutBackground">
-                    <div id="firstShortcut" class="shortcutImage"></div>
+    <div id="dashboard" class="flex column align-center">
+        <div id="time" class="text regular size-128">12:42</div>
+        <div id="day" class="text medium">MONDAY</div>
+        <div id="shortcuts" class="flex column align-center">
+            <div id="upperShortcuts" class="flex row justify-space-between">
+                <div class="shortcutBackground align-center justify-center square-75x75">
+                    <div id="firstShortcut" class="shortcutImage square-75x75"></div>
                 </div>
-                <div class="shortcutBackground">
-                    <div id="secondShortcut" class="shortcutImage"></div>
+                <div class="shortcutBackground align-center justify-center square-75x75">
+                    <div id="secondShortcut" class="shortcutImage square-75x75"></div>
                 </div>
             </div>
-            <div id="lowerShortcuts">
-                <div class="shortcutBackground">
-                    <div id="thirdShortcut" class="shortcutImage"></div>
+            <div id="lowerShortcuts" class="flex row justify-space-between">
+                <div class="shortcutBackground align-center justify-center square-75x75">
+                    <div id="thirdShortcut" class="shortcutImage square-75x75"></div>
                 </div>
-                <div class="shortcutBackground">
-                    <div id="fourthShortcut" class="shortcutImage"></div>
+                <div class="shortcutBackground align-center justify-center square-75x75">
+                    <div id="fourthShortcut" class="shortcutImage square-75x75"></div>
                 </div>
-                <div class="shortcutBackground">
-                    <div  id="fifthShortcut" class="shortcutImage"></div>
+                <div class="shortcutBackground align-center justify-center square-75x75">
+                    <div  id="fifthShortcut" class="shortcutImage square-75x75"></div>
                 </div>
             </div>
         </div>
-        <div id="settings" style="visibility: hidden;">
-            <div id="userName" class="settingsContainer">
-                <label id="userNameText" for="userNameInput" class="text settingsTexts">User Name:</label>
-                <input id="userNameInput" class="inputField" name="userNameInput" type="text" placeholder="Human" value="Human" maxlength="15"/>
+        <div id="settings" class="flex column align-center" style="visibility: hidden;">
+            <div id="userName" class="settingsContainer flex row align-center">
+                <label id="userNameText" for="userNameInput" class="pos-rel text medium size-20 settingsTexts">User Name:</label>
+                <input id="userNameInput" class="pos-rel inputField text medium size-16" name="userNameInput" type="text" placeholder="Human" value="Human" maxlength="15"/>
             </div>
-            <div id="language" class="settingsContainer">
-                <p id="languageText" class="text settingsTexts">Language:</p>
-                <div class="settingsButtons">
-                    <button id="languageButtonEnglish" data-state="active">
+            <div id="language" class="settingsContainer flex row align-center">
+                <p id="languageText" class="pos-rel text medium size-20 settingsTexts">Language:</p>
+                <div class="settingsButtons flex row">
+                    <button id="languageButtonEnglish" class="text medium size-16" data-state="active">
                         English
                     </button>
-                    <button id="languageButtonGerman">
+                    <button id="languageButtonGerman" class="text medium size-16">
                         German
                     </button>
                 </div>
             </div>
-            <div id="measureUnit" class="settingsContainer">
-                <p id="measureUnitText" class="text settingsTexts">Measure Unit:</p>
-                <div class="settingsButtons">
-                    <button id="measureUnitMetric" data-state="active">
+            <div id="measureUnit" class="settingsContainer flex row align-center">
+                <p id="measureUnitText" class="pos-rel text medium size-20 settingsTexts">Measure Unit:</p>
+                <div class="settingsButtons flex row">
+                    <button id="measureUnitMetric" class="text medium size-16" data-state="active">
                         Metric
                     </button>
-                    <button id="measureUnitImperial">
+                    <button id="measureUnitImperial" class="text medium size-16">
                         Imperial
                     </button>
                 </div>
             </div>
-            <div id="colorScheme" class="settingsContainer">
-                <p id="colorSchemeText" class="text settingsTexts">Color Scheme:</p>
-                <div class="settingsButtons">
-                    <button id="colorSchemeBlue" style="background: #033D6B;">
+            <div id="colorScheme" class="settingsContainer flex row align-center">
+                <p id="colorSchemeText" class="pos-rel text medium size-20 settingsTexts">Color Scheme:</p>
+                <div class="settingsButtons flex row">
+                    <button id="colorSchemeBlue" class="text medium size-16" style="background: #033D6B;">
                         Blue
                     </button>
-                    <button id="colorSchemeViolet" style="background: #370140;" data-state="active">
+                    <button id="colorSchemeViolet" class="text medium size-16" style="background: #370140;" data-state="active">
                         Violet
                     </button>
-                    <button id="colorSchemeGreen" style="background: #345502;">
+                    <button id="colorSchemeGreen" class="text medium size-16" style="background: #345502;">
                         Green
                     </button>
-                    <button id="colorSchemeRed" style="background: #450113;">
+                    <button id="colorSchemeRed" class="text medium size-16" style="background: #450113;">
                         Red
                     </button>
                 </div>
             </div>
-            <div id="searchEngine" class="settingsContainer">
-                <p id="searchEngineText" class="text settingsTexts">Search Engine:</p>
-                <div class="settingsSearchEngines">
+            <div id="searchEngine" class="settingsContainer flex row align-center">
+                <p id="searchEngineText" class="pos-rel text medium size-20 settingsTexts">Search Engine:</p>
+                <div class="settingsSearchEngines flex row">
                     <img id="google" alt="Icon of Google" src="../images/googleIcon.svg" data-state="active">
                     <img id="ecosia" alt="Icon of Ecosia" src="../images/ecosiaIcon.svg">
                     <img id="duckDuckGo" alt="Icon of DuckDuckGo" src="../images/duckDuckGoIcon.svg">
@@ -108,61 +108,61 @@
                 </div>
             </div>
         </div>
-        <p id="date" class="text">01.03.2024</p>
-        <div id="searchBar">
-            <input id="searchBarField" type="search" placeholder="Good Morning, Human. Ready to search the world?" autocomplete="off">
-            <label for="searchBarField" class="visually-hidden">Searchbar field</label>
+        <p id="date" class="text medium size-32">01.03.2024</p>
+        <div id="searchBar" class="flex row align-center">
+            <input id="searchBarField" class="pos-rel text medium size-20" type="search" placeholder="Good Morning, Human. Ready to search the world?" autocomplete="off">
+            <label for="searchBarField" class="pos-abs" style="visibility: hidden;">Searchbar field</label>
             <button id="searchBarButton">
                 <img id="searchBarIcon" alt="Icon of the search bar" src="../images/searchBarIcon.svg"/>
             </button>
-            <img id="settingsIcon" alt="Icon of settings" src="../images/settingsIcon.svg"/>
+            <img id="settingsIcon" class="square-40x40" alt="Icon of settings" src="../images/settingsIcon.svg"/>
         </div>
     </div>
-    <div id="weatherInfoContainer">
-        <div id="temperatureColumn">
-            <div id="temperatureColumnDivLeft" class="temperatureColumnDiv">
-                <div id="IconAndRainAmount">
-                    <span id="weatherIcon" class="material-symbols-outlined">
+    <div id="weatherInfoContainer" class="pos-abs flex row justify-space-between align-flex-start">
+        <div id="temperatureColumn" class="flex row align-center justify-space-between">
+            <div id="temperatureColumnDivLeft" class="temperatureColumnDiv flex column align-center justify-space-between">
+                <div id="IconAndRainAmount" class="pos-rel square-60x60">
+                    <span id="weatherIcon" class="pos-abs material-symbols-outlined">
                         cloudy
                     </span>
-                    <div id="amountOfRain" class="text">
+                    <div id="amountOfRain" class="pos-abs text medium size-16">
                         12mm
                     </div>
                 </div>
-                <div id="minMaxTemp">
-                    <div id="minTemp" class="text minMaxTempText">
+                <div id="minMaxTemp" class="flex column align-center justify-center">
+                    <div id="minTemp" class="text medium size-16">
                         MIN 18°C
                     </div>
-                    <div id="maxTemp" class="text minMaxTempText">
+                    <div id="maxTemp" class="text medium size-16">
                         MAX 26°C
                     </div>
                 </div>
             </div>
-            <div id="temperatureColumnDivRight" class="temperatureColumnDiv">
-                <div id="descriptionAndLocation">
-                    <div id="weatherDescription" class="text">
+            <div id="temperatureColumnDivRight" class="temperatureColumnDiv flex column justify-space-between align-flex-start">
+                <div id="descriptionAndLocation" class="flex column justify-center align-flex-start">
+                    <div id="weatherDescription" class="text medium size-32">
                         LIGHT RAIN
                     </div>
-                    <div id="weatherLocation" class="text">
+                    <div id="weatherLocation" class="text medium size-24">
                         Reken
                     </div>
                 </div>
-                <div id="tempAndThermometer">
-                    <div id="actualFeelsLikeTemp">
-                        <div id="actualTemp" class="text">
+                <div id="tempAndThermometer" class="flex row align-center justify-center">
+                    <div id="actualFeelsLikeTemp" class="flex column align-center justify-center">
+                        <div id="actualTemp" class="text medium size-32">
                             24°C
                         </div>
-                        <div id="feelsLikeTemp" class="text">
+                        <div id="feelsLikeTemp" class="text medium size-10">
                             FEELS LIKE 22°C
                         </div>
                     </div>
-                    <img id="thermometerIcon" alt="Icon of a thermometer" src="../images/thermometerIcon.svg">
+                    <img id="thermometerIcon" class="square-60x60" alt="Icon of a thermometer" src="../images/thermometerIcon.svg">
                 </div>
             </div>
         </div>
         <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
-        <div class="simpleWeatherColumn">
-            <div class="weatherColumnDiv">
+        <div class="simpleWeatherColumn flex column justify-center">
+            <div class="weatherColumnDiv flex row align-center justify-flex-start">
                 <svg id="windDirectionIcon" width="60" height="60" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="path-1-inside-1_30_26" fill="white">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M42.9254 15.1984H27.084V35H32.5295C32.5295 35 32.5295 35 32.5295 35C32.5295 33.633 33.6377 32.5248 35.0047 32.5248C36.3717 32.5248 37.4799 33.633 37.4799 35C37.4799 35 37.4799 35 37.4799 35H42.9254V15.1984Z"/>
@@ -178,20 +178,20 @@
                         </linearGradient>
                     </defs>
                 </svg>
-                <p id="windDirectionText" class="text weatherText">
+                <p id="windDirectionText" class="text medium size-24">
                     156°
                 </p>
             </div>
-            <div class="weatherColumnDiv">
-                <img class="weatherIcon" alt="Icon for wind speed" src="../images/windSpeedIcon.svg"/>
-                <p id="windSpeedText" class="text weatherText">
+            <div class="weatherColumnDiv flex row align-center justify-flex-start">
+                <img class="square-60x60" alt="Icon for wind speed" src="../images/windSpeedIcon.svg"/>
+                <p id="windSpeedText" class="text medium size-24">
                     10.6 m/s
                 </p>
             </div>
         </div>
         <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
-        <div class="simpleWeatherColumn">
-            <div class="weatherColumnDiv">
+        <div class="simpleWeatherColumn flex column justify-center">
+            <div class="weatherColumnDiv flex row align-center justify-flex-start">
                 <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="12" y="35" width="18" height="15" fill="url(#paint0_linear_30_37)"/>
                     <path d="M21.7396 22.9418L21.4286 22.6949L21.1176 22.9418C16.3067 26.7626 12.6899 30.3296 10.2872 33.6441C7.886 36.9564 6.64288 40.0789 6.64288 43C6.64288 47.0204 8.05674 50.4023 10.8817 53.1109C13.7059 55.8189 17.2337 57.1667 21.4286 57.1667C25.6235 57.1667 29.1513 55.8189 31.9755 53.1109C34.8005 50.4023 36.2143 47.0204 36.2143 43C36.2143 40.0789 34.9712 36.9564 32.57 33.6441C30.1673 30.3296 26.5505 26.7626 21.7396 22.9418ZM27.449 48.9053C27.0252 49.3009 26.5165 49.5 25.8929 49.5C25.2693 49.5 24.7605 49.3009 24.3367 48.9053C23.9142 48.511 23.7143 48.0519 23.7143 47.5C23.7143 46.9482 23.9142 46.489 24.3367 46.0947C24.7605 45.6992 25.2693 45.5 25.8929 45.5C26.5165 45.5 27.0252 45.6992 27.449 46.0947C27.8715 46.489 28.0715 46.9482 28.0715 47.5C28.0715 48.0519 27.8715 48.511 27.449 48.9053ZM25.9822 37.434L27.7494 39.0834L16.875 49.2327L15.1078 47.5834L25.9822 37.434ZM18.5205 40.572C18.0967 40.9676 17.5879 41.1667 16.9643 41.1667C16.3407 41.1667 15.832 40.9676 15.4081 40.572C14.9857 40.1777 14.7857 39.7185 14.7857 39.1667C14.7857 38.6149 14.9857 38.1557 15.4081 37.7614C15.832 37.3658 16.3407 37.1667 16.9643 37.1667C17.5879 37.1667 18.0967 37.3658 18.5205 37.7614C18.943 38.1557 19.1429 38.6149 19.1429 39.1667C19.1429 39.7185 18.943 40.1777 18.5205 40.572Z" fill="white" stroke="black"/>
@@ -214,11 +214,11 @@
                         </linearGradient>
                     </defs>
                 </svg>
-                <p id="humidityText" class="text weatherText">
+                <p id="humidityText" class="text medium size-24">
                     75%
                 </p>
             </div>
-            <div class="weatherColumnDiv">
+            <div class="weatherColumnDiv flex row align-center justify-flex-start">
                 <svg width="60" height="60" viewBox="0 0 60 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.12455 20.0474L1.05228 20.2308L1.12455 20.4141C3.46852 26.3608 7.24994 31.1105 12.4626 34.6508C17.6743 38.1904 23.456 39.9615 29.7948 39.9615C36.1336 39.9615 41.9154 38.1904 47.127 34.6508C52.3398 31.1105 56.1212 26.3608 58.4651 20.4141L58.5374 20.2308L58.4651 20.0474C56.1212 14.1007 52.3398 9.35104 47.127 5.81074C41.9154 2.27116 36.1336 0.5 29.7948 0.5C23.456 0.5 17.6743 2.27116 12.4626 5.81074C7.24994 9.35104 3.46852 14.1007 1.12455 20.0474ZM37.6144 28.0503C35.4656 30.1991 32.8689 31.2692 29.7948 31.2692C26.7208 31.2692 24.1241 30.1991 21.9753 28.0503C19.8266 25.9015 18.7564 23.3048 18.7564 20.2308C18.7564 17.1567 19.8266 14.56 21.9753 12.4112C24.1241 10.2625 26.7208 9.19231 29.7948 9.19231C32.8689 9.19231 35.4656 10.2625 37.6144 12.4112C39.7631 14.56 40.8333 17.1567 40.8333 20.2308C40.8333 23.3048 39.7631 25.9015 37.6144 28.0503ZM24.5374 25.4882C25.9784 26.9292 27.7407 27.6538 29.7948 27.6538C31.849 27.6538 33.6113 26.9292 35.0522 25.4882C36.4932 24.0472 37.2179 22.2849 37.2179 20.2308C37.2179 18.1766 36.4932 16.4144 35.0522 14.9734C33.6113 13.5324 31.849 12.8077 29.7948 12.8077C27.7407 12.8077 25.9784 13.5324 24.5374 14.9734C23.0965 16.4144 22.3718 18.1766 22.3718 20.2308C22.3718 22.2849 23.0965 24.0472 24.5374 25.4882Z" fill="white" stroke="black"/>
                     <path d="M5.07185 19.6231L5.36613 19.5573L5.44521 19.2663C5.80517 17.9416 6.51967 16.8783 7.59625 16.0601C8.67395 15.241 9.88838 14.8333 11.2564 14.8333C12.9442 14.8333 14.3587 15.4155 15.5299 16.5866C16.7011 17.7578 17.2832 19.1723 17.2832 20.8601V21.3055L17.7256 21.3568C18.6768 21.4671 19.4531 21.8713 20.0775 22.5781C20.7035 23.2866 21.0128 24.1051 21.0128 25.0559C21.0128 26.0903 20.6565 26.9534 19.9355 27.6744C19.2145 28.3954 18.3514 28.7517 17.317 28.7517H6.12821C4.84328 28.7517 3.76082 28.3124 2.85287 27.4255C1.94786 26.5416 1.5 25.4744 1.5 24.1935C1.5 23.0902 1.82958 22.1178 2.49164 21.2585C3.14981 20.4043 4.00346 19.8621 5.07185 19.6231Z" fill="url(#paint0_linear_30_51)" stroke="black"/>
@@ -239,57 +239,57 @@
                         </linearGradient>
                     </defs>
                 </svg>
-                <p id="visibilityText" class="text weatherText">
+                <p id="visibilityText" class="text medium size-24">
                     5.34 km
                 </p>
             </div>
         </div>
         <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
-        <div id="forecastColumn">
-            <p id="forecastText" class="text">5-DAY FORECAST</p>
-            <div id="forecastDays">
-                <div class="forecastDay">
-                    <p class="text forecastDayName">WED</p>
+        <div id="forecastColumn" class="flex column align-center justify-flex-start">
+            <p id="forecastText" class="text medium size-32">5-DAY FORECAST</p>
+            <div id="forecastDays" class="flex row align-center">
+                <div class="forecastDay flex column align-center justify-space-between">
+                    <p class="text regular size-24">WED</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         rainy
                     </span>
-                    <p class="text forecastDayDescription">RAINY</p>
+                    <p class="text medium size-16">RAINY</p>
                 </div>
-                <div class="forecastDay">
-                    <p class="text forecastDayName">THU</p>
+                <div class="forecastDay flex column align-center justify-space-between">
+                    <p class="text regular size-24">THU</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         rainy
                     </span>
-                    <p class="text forecastDayDescription">LIGHT RAIN</p>
+                    <p class="text medium size-16">LIGHT RAIN</p>
                 </div>
-                <div class="forecastDay">
-                    <p class="text forecastDayName">FRI</p>
+                <div class="forecastDay flex column align-center justify-space-between">
+                    <p class="text regular size-24">FRI</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         cloudy
                     </span>
-                    <p class="text forecastDayDescription">CLOUDY</p>
+                    <p class="text medium size-16">CLOUDY</p>
                 </div>
-                <div class="forecastDay">
-                    <p class="text forecastDayName">SAT</p>
+                <div class="forecastDay flex column align-center justify-space-between">
+                    <p class="text regular size-24">SAT</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         clear_day
                     </span>
-                    <p class="text forecastDayDescription">CLEAR DAY</p>
+                    <p class="text medium size-16">CLEAR DAY</p>
                 </div>
-                <div class="forecastDay">
-                    <p class="text forecastDayName">SUN</p>
+                <div class="forecastDay flex column align-center justify-space-between">
+                    <p class="text regular size-24">SUN</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         clear_day
                     </span>
-                    <p class="text forecastDayDescription">CLEAR DAY</p>
+                    <p class="text medium size-16">CLEAR DAY</p>
                 </div>
             </div>
         </div>
         <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
-        <div id="dayCycleColumn">
-            <p id="dayCycleText" class="text">DAY CYCLE</p>
-            <div id="dayCycleImage">
-                <svg id="dayCycleArch" width="150" height="75" viewBox="0 0 150 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div id="dayCycleColumn" class="flex column align-center justify-space-between">
+            <p id="dayCycleText" class="text medium size-32">DAY CYCLE</p>
+            <div id="dayCycleImage" class="pos-rel">
+                <svg id="dayCycleArch" class="pos-abs" width="150" height="75" viewBox="0 0 150 75" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_145_9)">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M133.186 119.091C119.855 136.656 98.7521 148 75 148C51.2479 148 30.1453 136.656 16.8143 119.091H14.3223C27.9578 137.824 50.0569 150 75 150C99.9431 150 122.042 137.824 135.678 119.091H133.186ZM2.00139 75.4546C2.00046 75.3031 2 75.1516 2 75C2 34.6832 34.6832 2 75 2C115.317 2 148 34.6832 148 75C148 75.1516 148 75.3031 147.999 75.4546H149.999C150 75.3031 150 75.1516 150 75C150 33.5786 116.421 0 75 0C33.5786 0 0 33.5786 0 75C0 75.1516 0.000449943 75.3031 0.00134857 75.4546H2.00139Z" fill="#D9D9D9"/>
                         <ellipse cx="74.5" cy="71" rx="16.5" ry="4.5" fill="#D9D9D9" fill-opacity="0.5"/>
@@ -301,7 +301,7 @@
                         </clipPath>
                     </defs>
                 </svg>
-                <img id="dayCycleIcon" alt="icon that shows the time of day" src="../images/dayCycleIcon.svg"/>
+                <img id="dayCycleIcon" class="pos-abs" alt="icon that shows the time of day" src="../images/dayCycleIcon.svg"/>
             </div>
         </div>
     </div>
