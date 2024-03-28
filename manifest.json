@@ -9,5 +9,11 @@
   "manifest_version": 3,
   "permissions": [
     "storage"
-  ]
+  ],
+  "icons": {
+    "16": "favIcons/icon16.png",
+    "32": "favIcons/icon32.png",
+    "48": "favIcons/icon48.png",
+    "128": "favIcons/icon128.png"
+  }
 }
