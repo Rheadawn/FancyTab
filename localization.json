@@ -1,5 +1,7 @@
 {
   "English": {
+    "languageCode" : "en",
+    "defaultUserName" : "Friend",
     "userNameText": "User Name:",
     "languageText" : "Language:",
     "languageButtonEnglish" :  "English",
@@ -12,9 +14,38 @@
     "colorSchemeViolet" : "Violet",
     "colorSchemeGreen" : "Green",
     "colorSchemeRed" : "Red",
-    "searchEngineText" : "Search Engine:"
+    "searchEngineText" : "Search Engine:",
+    "searchbarPlaceholder": {
+      "morning" : "Good Morning, #userName. Ready to search the world?",
+      "afternoon" : "Good Afternoon, #userName. Ready to search the world?",
+      "evening" : "Good Evening, #userName. Ready to search the world?",
+      "sleep" : "Get some sleep, #userName."
+    },
+    "weather" : {
+      "Thunderstorm" : "Thunderstorm",
+      "Drizzle" : "Drizzle",
+      "Rain" : "Rain",
+      "Snow" : "Snow",
+      "Mist" : "Mist",
+      "Smoke" : "Smoke",
+      "Haze" : "Haze",
+      "Dust" : "Dust",
+      "Fog" : "Fog",
+      "Sand" : "Sand",
+      "Ash" : "Ash",
+      "Squall" : "Squall",
+      "Tornado" : "Tornado",
+      "Clear" : "Clear",
+      "Clouds" : "Clouds"
+    },
+    "daysOfTheWeek" : ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+    "forecastText" : "5-DAY FORECAST",
+    "dayCycleText" : "DAY CYCLE",
+    "nightCycleText" : "NIGHT CYCLE"
   },
   "German": {
+    "languageCode" : "de",
+    "defaultUserName" : "Freund",
     "userNameText": "Benutzername:",
     "languageText" : "Sprache:",
     "languageButtonEnglish" :  "Englisch",
@@ -27,6 +58,33 @@
     "colorSchemeViolet" : "Lila",
     "colorSchemeGreen" : "Grün",
     "colorSchemeRed" : "Rot",
-    "searchEngineText" : "Search Engine:"
+    "searchEngineText" : "Search Engine:",
+    "searchbarPlaceholder": {
+      "morning" : "Guten Morgen, #userName. Bereit, die Welt zu erkunden?",
+      "afternoon" : "Guten Nachmittag, #userName. Bereit, die Welt zu erkunden?",
+      "evening" : "Guten Abend, #userName. Bereit, die Welt zu erkunden?",
+      "sleep" : "Ruhe dich aus, #userName."
+    },
+    "weather" : {
+      "Thunderstorm" : "Gewitter",
+      "Drizzle" : "Fissel",
+      "Rain" : "Regen",
+      "Snow" : "Schnee",
+      "Mist" : "Nebel",
+      "Smoke" : "Rauch",
+      "Haze" : "Dunst",
+      "Dust" : "Staub",
+      "Fog" : "Nebel",
+      "Sand" : "Sand",
+      "Ash" : "Asche",
+      "Squall" : "Böen",
+      "Tornado" : "Tornado",
+      "Clear" : "Klar",
+      "Clouds" : "Wolken"
+    },
+    "daysOfTheWeek" : ["SO", "MO", "DI", "MI", "DO", "FR", "SA"],
+    "forecastText" : "5-TAGE VORSCHAU",
+    "dayCycleText" : "TAGESZYKLUS",
+    "nightCycleText" : "NACHTZYKLUS"
   }
 }

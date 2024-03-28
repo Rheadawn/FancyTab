@@ -2,6 +2,7 @@ window.onload = loadWindow
 
 //---LOAD_WINDOW---/////////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadWindow(){
+    await getConfigFiles()
     await initiateSettings()
     await setSavedSettings(true)
     openDataBase()
@@ -15,13 +16,25 @@ async function loadWindow(){
 
 
 
+//---CREDENTIALS---/////////////////////////////////////////////////////////////////////////////////////////////////////
+let credentials
+let localization
+let measureUnits
+async function getConfigFiles() {
+    credentials = await (await fetch("../config.json")).json()
+    localization = await (await fetch("../localization.json")).json()
+    measureUnits = await (await fetch("../measureUnit.json")).json()
+}
+
+
+
 //--EVENT_LISTENERS---//////////////////////////////////////////////////////////////////////////////////////////////////
 let colorOn = true
 let refreshBackgroundImageOn = true
 let currentBackgroundImage
 let shortcutURL = ["https://twitch.tv", "https://overleaf.com", "https://youtube.com", "https://github.com", "https://gitlab.com"]
 let shortcutImage = ["../images/twitchShortcut.svg", "../images/overleafShortcut.svg", "../images/youtubeShortcut.svg", "../images/githubShortcut.svg", "../images/gitlabShortcut.svg"]
-let selectedShortcutIndex;
+let selectedShortcutIndex
 
 function setEventListeners(){
     //Event Listener for the POWER BUTTON
@@ -31,8 +44,7 @@ function setEventListeners(){
     document.getElementById("colorButton").addEventListener("click", () => {
         colorOn = !colorOn
         chrome.storage.sync.set({ "colorOn": colorOn }).then(() => {});
-        document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
-        updateImageColor()
+        updateColorOn(colorOn)
     })
     document.getElementById("refreshButton").addEventListener("click", async () => {
         refreshBackgroundImageOn = !refreshBackgroundImageOn
@@ -54,11 +66,11 @@ function setEventListeners(){
     document.getElementById("settingsIcon").addEventListener("click", () => {toggleSettings()})
     document.getElementById("userNameInput").addEventListener("change", () => {updateUserName(false)})
     let languageButtons = document.querySelectorAll("#language button")
-    languageButtons.forEach((element) => {element.addEventListener("click", () => {updateLanguage(element.innerText, false)})})
+    languageButtons.forEach((element) => {element.addEventListener("click", () => {updateLanguage(element.dataset.language, false)})})
     let unitMeasureButtons = document.querySelectorAll("#measureUnit button")
-    unitMeasureButtons.forEach((element) => {element.addEventListener("click", () => {updateMeasureUnit(element.innerText, false)})})
+    unitMeasureButtons.forEach((element) => {element.addEventListener("click", () => {updateMeasureUnit(element.dataset.unit, false)})})
     let colorSchemeButtons = document.querySelectorAll("#colorScheme button")
-    colorSchemeButtons.forEach((element) => {element.addEventListener("click", () => {updateColorScheme(element.innerText, false)})})
+    colorSchemeButtons.forEach((element) => {element.addEventListener("click", () => {updateColorScheme(element.dataset.color, false)})})
     let searchEngineImages = document.querySelectorAll("#searchEngine img")
     searchEngineImages.forEach((element) => {element.addEventListener("click", () => {updateSearchEngine(element.id, false)})})
     
@@ -99,28 +111,8 @@ function setEventListeners(){
 
 
 
-//---CREDENTIALS---/////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getCredentials() {
-    let apiCredentialsResponse = await fetch("../config.json")
-     return await apiCredentialsResponse.json()
-}
-
-
-
-//---SHORTCUTS---///////////////////////////////////////////////////////////////////////////////////////////////////////
-function imageToBase64(image){
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (event) => resolve(event.target.result)
-        reader.onerror = reject
-        reader.readAsDataURL(image);
-    })
-}
-
-
-
 //---LOCAL_STORAGE---///////////////////////////////////////////////////////////////////////////////////////////////////
-let db;
+let db
 function openDataBase(){
     let request = indexedDB.open("localStorage")
     
@@ -147,7 +139,7 @@ function loadImageFromDB(){
     let image = document.getElementById("backgroundImage")
     
     request.onerror = () => {
-        setDefaultImage()
+        document.getElementById("backgroundImage").style.backgroundImage = `url(../images/defaultBackgroundImage.jpg)`
         if(refreshBackgroundImageOn){
             fetchRandomImage().then()
         }
@@ -155,7 +147,7 @@ function loadImageFromDB(){
     
     request.onsuccess = () => {
         if(request.result === undefined) {
-            setDefaultImage()
+            document.getElementById("backgroundImage").style.backgroundImage = `url(../images/defaultBackgroundImage.jpg)`
         }else{
             let imageObjectURL = URL.createObjectURL(request.result)
             image.style.backgroundImage = `url(${imageObjectURL})`
@@ -180,14 +172,8 @@ function saveImageToDB(blob){
 
 
 
-//---BACKGROUND_IMAGE---////////////////////////////////////////////////////////////////////////////////////////////////
-function setDefaultImage(){
-    let image = document.getElementById("backgroundImage")
-    image.style.backgroundImage = `url(../images/defaultBackgroundImage.jpg)`
-}
-
+//---BACKGROUND_AND_SHORTCUT_IMAGES---//////////////////////////////////////////////////////////////////////////////////
 async function fetchRandomImage(){
-    let credentials = await getCredentials()
     let imageResponse = await (await fetch(`https://api.unsplash.com/photos/random?client_id=${credentials.imageAPI.accessKey}&orientation=landscape&query=wallpaper,nature,animals`)).json()
     let imageURL = imageResponse.urls.raw + "&w=1920&h=1080";
     await imageURLToBlobAndSave(imageURL)
@@ -202,13 +188,13 @@ async function imageURLToBlobAndSave(src) {
     await saveImageToDB(blob)
 }
 
-function updateImageColor(){
-    let image = document.getElementById("backgroundImage")
-    if(colorOn){
-        image.style.filter = `grayscale(0%)`
-    }else{
-        image.style.filter = `grayscale(100%)`
-    }
+function imageToBase64(image){
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => resolve(event.target.result)
+        reader.onerror = reject
+        reader.readAsDataURL(image);
+    })
 }
 
 
@@ -224,13 +210,9 @@ function updateClock(){
     let month = (date.getMonth() + 1).toString().padStart(2, `0`)
     let year = date.getFullYear()
     
-    let clockTime = document.getElementById("time")
-    let clockDay = document.getElementById("day")
-    let clockDate = document.getElementById("date")
-    
-    clockTime.innerText = `${hours}:${minutes}`
-    clockDay.innerText = weekday
-    clockDate.innerText = `${day}.${month}.${year}`
+    document.getElementById("time").innerText = `${hours}:${minutes}`
+    document.getElementById("day").innerText = weekday
+    document.getElementById("date").innerText = `${day}.${month}.${year}`
 }
 
 
@@ -242,7 +224,6 @@ let lastWeatherInfo
 let lastWeatherForecast
 
 async function updateWeatherInfo(){
-    let credentials = await getCredentials()
     let accessKey = credentials.weatherAPI.accessKey
     navigator.geolocation.getCurrentPosition(
         (position) => onGeolocationSuccess(position, accessKey),
@@ -291,11 +272,12 @@ async function retrieveLastWeatherData(){
 async function onGeolocationSuccess(position, accessKey){
     let lat = position.coords.latitude
     let lon = position.coords.longitude
+    let languageCode = localization[selectedLanguage].languageCode
     let update = weatherUpdateNecessary(lat, lon)
     let weatherInfo = update? await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json() : lastWeatherInfo
-    displayWeatherInfo(weatherInfo)
+    await displayWeatherInfo(weatherInfo)
     let forecast = update? await (await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json() : lastWeatherForecast
-    displayForecast(forecast)
+    await displayForecast(forecast)
     if(update){
         chrome.storage.local.set({ "lastGeolocation": {"latitude": position.coords.latitude, "longitude": position.coords.longitude} }).then(() => {});
         chrome.storage.local.set({ "lastWeatherUpdateTime": new Date() }).then(() => {});
@@ -304,18 +286,19 @@ async function onGeolocationSuccess(position, accessKey){
     }
 }
 
-async function onGeolocationError(positionError, accessKey){ // On Error and if no past data exists: default location is Reken
+async function onGeolocationError(positionError, accessKey){ // On Error and if no past data exists: default location Reken
     await retrieveLastWeatherData()
     let notDefined = lastWeatherInfo === undefined || lastWeatherForecast === undefined
+    let languageCode = localization[selectedLanguage].languageCode
     
     let weatherInfo = notDefined? await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=51.8306&lon=7.0443&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json() : lastWeatherInfo
     let forecast = notDefined? await (await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=51.8306&lon=7.0443&units=${measureUnit.toLowerCase()}&lang=${languageCode}&appid=${accessKey}`)).json() : lastWeatherForecast
 
-    displayWeatherInfo(weatherInfo)
-    displayForecast(forecast)
+    await displayWeatherInfo(weatherInfo)
+    await displayForecast(forecast)
 }
 
-function displayWeatherInfo(weatherInfo){
+async function displayWeatherInfo(weatherInfo){
     let icon = document.getElementById("weatherIcon")
     setWeatherIcon(icon, weatherInfo.weather[0].id)
     setDayCycleIcon(weatherInfo)
@@ -326,7 +309,7 @@ function displayWeatherInfo(weatherInfo){
     let tempMin = weatherInfo.main.temp_min.toFixed(1)
     let humidity = weatherInfo.main.humidity
     let cityName = weatherInfo.name
-    let weatherDescription = weatherInfo.weather[0].main
+    let description = weatherInfo.weather[0].main
     let windSpeed = weatherInfo.wind.speed
     let windDirection = weatherInfo["wind"]["deg"]
     let visibility = weatherInfo.visibility / 1000
@@ -335,28 +318,27 @@ function displayWeatherInfo(weatherInfo){
     
     document.getElementById("amountOfRain").innerText = (rainInMM !== "")? `${rainInMM}mm` : `${snowInMM}mm`
     document.getElementById("amountOfRain").style.visibility = (rainInMM !== "" || snowInMM !== "")? "visible" : "hidden"
-    document.getElementById("weatherDescription").innerText = (selectedLanguage === "English")? weatherDescription : convertWeatherDescriptionToGerman(weatherDescription)
+    document.getElementById("weatherDescription").innerText = localization[selectedLanguage].weather[description]
     document.getElementById("weatherLocation").innerText = cityName
-    document.getElementById("minTemp").innerText = `MIN ${tempMin}${temperatureUnit}`
-    document.getElementById("maxTemp").innerText = `MAX ${tempMax}${temperatureUnit}`
-    document.getElementById("actualTemp").innerText = `${tempFeels}${temperatureUnit}`
-    document.getElementById("feelsLikeTemp").innerText = `FEELS LIKE ${tempActual}${temperatureUnit}`
+    document.getElementById("minTemp").innerText = `MIN ${tempMin}${measureUnits[measureUnit].temperatureUnit}`
+    document.getElementById("maxTemp").innerText = `MAX ${tempMax}${measureUnits[measureUnit].temperatureUnit}`
+    document.getElementById("actualTemp").innerText = `${tempFeels}${measureUnits[measureUnit].temperatureUnit}`
+    document.getElementById("feelsLikeTemp").innerText = `FEELS LIKE ${tempActual}${measureUnits[measureUnit].temperatureUnit}`
     document.getElementById("windDirectionText").innerText = `${windDirection}°`
     document.getElementById("windDirectionIcon").style.transform = `rotate(${windDirection}deg)`
-    document.getElementById("windSpeedText").innerText = `${windSpeed} ${speedUnit}`
+    document.getElementById("windSpeedText").innerText = `${windSpeed} ${measureUnits[measureUnit].speedUnit}`
     document.getElementById("humidityText").innerText = `${humidity}%`
     document.getElementById("visibilityText").innerText = `${visibility} km`
 }
 
-let daysOfTheWeekEnglish = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-let daysOfTheWeekGerman = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"]
-function displayForecast(forecast){
+async function displayForecast(forecast){
     let forecastIcons = document.querySelectorAll("#forecastDays span")
     forecastIcons.forEach((element, index) => {
+        console.log(forecast.list[index].weather[0].id)
         setWeatherIcon(element, forecast.list[index].weather[0].id)
     })
     
-    let dayArray = (selectedLanguage === "English")? daysOfTheWeekEnglish : daysOfTheWeekGerman
+    let dayArray = localization[selectedLanguage].daysOfTheWeek
     let currentDayIndex = (new Date()).getDay()
     let forecastDays = document.querySelectorAll("#forecastDays p.forecastDayName")
     forecastDays.forEach((element, index) => {
@@ -366,30 +348,10 @@ function displayForecast(forecast){
     let forecastDescriptions = document.querySelectorAll("#forecastDays p.forecastDayDescription")
     forecastDescriptions.forEach((element, index) => {
         let description = forecast.list[index].weather[0].main
-        element.innerText = (selectedLanguage === "English")? description : convertWeatherDescriptionToGerman(description) 
+        element.innerText = localization[selectedLanguage].weather[description]
     })
     
-    document.getElementById("forecastText").innerText = (selectedLanguage === "English")? "5-DAY FORECAST" : "5-TAGE VORSCHAU"
-}
-
-function convertWeatherDescriptionToGerman(description){
-    switch(description){
-        case "Thunderstorm" : return "Gewitter";
-        case "Drizzle" : return "Fissel";
-        case "Rain" : return "Regen";
-        case "Snow" : return "Schnee";
-        case "Mist" : return "Nebel";
-        case "Smoke" : return "Rauch";
-        case "Haze" : return "Dunst";
-        case "Dust" : return "Staub";
-        case "Fog" : return "Nebel";
-        case "Sand" : return "Sand";
-        case "Ash" : return "Asche";
-        case "Squall" : return "Böen";
-        case "Tornado" : return "Tornado";
-        case "Clear" : return "Klar";
-        case "Clouds" : return "Wolken";
-    }
+    document.getElementById("forecastText").innerText = localization[selectedLanguage].forecastText
 }
 
 function setWeatherIcon(icon, weatherCode){
@@ -409,24 +371,27 @@ function setDayCycleIcon(weatherInfo){
     let currentTime = weatherInfo.dt
     let sunrise = weatherInfo.sys.sunrise
     let sunset = weatherInfo.sys.sunset
+    
     let isDayTime = (currentTime >= sunrise) && (currentTime <= sunset)
     let isBeforeMidnight = (currentTime >= sunrise) && (currentTime >= sunset)
-    let percentageOfCycleOver
+
     let dayCycleText = document.getElementById("dayCycleText")
+    let percentageOfCycleOver
 
     if(isDayTime){ //daytime
         let dayLength = sunset - sunrise
         percentageOfCycleOver = (currentTime - sunrise) / dayLength
-        dayCycleText.innerText = (selectedLanguage === "English")? "DAY CYCLE" : "TAGESZYKLUS"
+        dayCycleText.innerText = localization[selectedLanguage].dayCycleText
     }else if(isBeforeMidnight){ //nighttime before midnight
         let nightLength = (sunrise + 86400) - sunset
         percentageOfCycleOver = (currentTime - sunset) / nightLength
-        dayCycleText.innerText = (selectedLanguage === "English")? "NIGHT CYCLE" : "NACHTZYKLUS"
+        dayCycleText.innerText = localization[selectedLanguage].nightCycleText
     }else{ //nighttime after midnight
         let nightLength = sunrise  - (sunset - 86400)
         percentageOfCycleOver = (currentTime - (sunset - 86400)) / nightLength
-        dayCycleText.innerText = (selectedLanguage === "English")? "NIGHT CYCLE" : "NACHTZYKLUS"
+        dayCycleText.innerText = localization[selectedLanguage].nightCycleText
     }
+    
     let x = percentageOfCycleOver * 150
     let y = 75 * Math.sin(Math.acos((x - 75) / 75))
 
@@ -441,12 +406,10 @@ function setDayCycleIcon(weatherInfo){
 
 //---SEARCH_BAR---
 let searchEngine = "google"
-
 function updateSearchBar(){
-    let searchBarField = document.getElementById("searchBarField")
     updateSearchBarPlaceholder()
     
-    let searchBarPosition = searchBarField.getBoundingClientRect();
+    let searchBarPosition = document.getElementById("searchBarField").getBoundingClientRect();
     let searchBarIcon = document.getElementById("searchBarIcon")
     searchBarIcon.left = searchBarPosition.right - searchBarIcon.style.width
     searchBarIcon.top = searchBarPosition.top
@@ -454,23 +417,14 @@ function updateSearchBar(){
 
 function updateSearchBarPlaceholder(){
     let searchBarField = document.getElementById("searchBarField")
-    let date = new Date();
-    let hours = date.getHours()
-
-    if(selectedLanguage === "English"){
-        switch(true){
-            case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = `Good Morning, ${userName}. Ready to search the world?`;
-            case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = `Good Afternoon, ${userName}. Ready to search the world?`;
-            case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = `Good Evening, ${userName}. Ready to search the world?`;
-            case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = `Get some sleep, ${userName}.`;
-        }
-    }else{
-        switch(true){
-            case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = `Guten Morgen, ${userName}. Bereit, die Welt zu erkunden?`;
-            case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = `Guten Nachmittag, ${userName}. Bereit, die Welt zu erkunden?`;
-            case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = `Guten Abend, ${userName}. Bereit, die Welt zu erkunden?`;
-            case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = `Ruhe dich aus, ${userName}.`;
-        }
+    let hours = new Date().getHours()
+    
+    let text = localization[selectedLanguage].searchbarPlaceholder
+    switch(true){
+        case (hours >= 6) && (hours <= 11): return searchBarField.placeholder = text.morning.replace("#userName", userName)
+        case (hours >= 12) && (hours <= 17): return searchBarField.placeholder = text.afternoon.replace("#userName", userName)
+        case (hours >= 18) && (hours <= 23): return searchBarField.placeholder = text.evening.replace("#userName", userName)
+        case (hours >= 0) && (hours <= 6): return searchBarField.placeholder = text.sleep.replace("#userName", userName)
     }
 }
 
@@ -491,10 +445,9 @@ function searchBarOnClick(){
 
 
 //---SETTINGS_GENERAL---////////////////////////////////////////////////////////////////////////////////////////////////
-let settingsActive = false;
+let settingsActive = false
 let syncSettingsKeys = ["colorOn", "colorScheme", "searchEngine", "userName", "measureUnit", "language"]
 let localSettingsKeys = ["refreshBackgroundImageOn"]
-
 async function initiateSettings(){
     for(let i=0; i < syncSettingsKeys.length; i++){
         let key = syncSettingsKeys[i]
@@ -514,12 +467,18 @@ async function initiateSettings(){
     if(Object.keys(shortcutURLResult).length === 0) await chrome.storage.local.set({"shortcutURL": shortcutURL})
 }
 
+function toggleSettings(){
+    settingsActive = !settingsActive
+    document.getElementById("settings").style.visibility = settingsActive? "visible" : "hidden"
+    if(settingsActive) document.getElementById("shortcutDialog").close()
+}
+
 async function setSavedSettings(onload, changes){
     let settings = changes? objectMap(changes, element => element.newValue) : await chrome.storage.sync.get()
     Object.keys(settings).forEach(key => {
         let value = settings[key]
         switch(key){
-            case "colorOn": return updateColorOn(value)
+            case "colorOn": return (value !== undefined)? updateColorOn(value) : updateColorOn(true)
             case "colorScheme": return value? updateColorScheme(value, true) : updateColorScheme("colorSchemeViolet", false)
             case "searchEngine": return value?  updateSearchEngine(value, true) : updateSearchEngine("google", false)
             case "userName": return value? updateUserNameValue(value) : updateUserName(true)
@@ -551,13 +510,10 @@ function objectMap(object, fn){
 }
 
 function updateColorOn(colorOnValue){
-    if(colorOnValue !== undefined){
-        colorOn = colorOnValue
-        document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
-    }else{
-        document.getElementById("colorButton").src = "../images/colorOn.svg"
-    }
-    updateImageColor()
+    colorOn = colorOnValue
+
+    document.getElementById("colorButton").src = colorOn? "../images/colorOn.svg" : "../images/colorOff.svg"
+    document.getElementById("backgroundImage").style.filter = colorOn? `grayscale(0%)` : `grayscale(100%)`
 }
 
 function updateUserNameValue(userNameValue){
@@ -588,18 +544,20 @@ function updateShortcutURL(shortcutURLValue){
     document.getElementById("shortcutURLInput").value = shortcutURL[selectedShortcutIndex]
 }
 
-function toggleSettings(){
-    settingsActive = !settingsActive;
-    let settings = document.getElementById("settings")
-    settings.style.visibility = settingsActive? "visible" : "hidden";
-    let shortcutDialog = document.getElementById("shortcutDialog")
-    if(settingsActive) shortcutDialog.close()
+
+
+//---SETTINGS_BUTTONS---////////////////////////////////////////////////////////////////////////////////////////////////
+function toggleButtons(buttonsToDeactivate, buttonToActivate){
+    let buttons = document.querySelectorAll(buttonsToDeactivate)
+    buttons.forEach((element) => {element.dataset.state = "inactive"})
+    let selectedButton = document.getElementById(buttonToActivate)
+    selectedButton.dataset.state = "active"
 }
 
 
 
 //---SETTINGS_USER_NAME---//////////////////////////////////////////////////////////////////////////////////////////////
-let userName = "Human"
+let userName = "Friend"
 function updateUserName(sync){
     let userNameInput = document.getElementById("userNameInput")
     if(!sync){
@@ -616,157 +574,88 @@ function updateUserName(sync){
 
 //---SETTINGS_LANGUAGE---///////////////////////////////////////////////////////////////////////////////////////////////
 let selectedLanguage = "English"
-let languageCode = "en"
 function updateLanguage(language, sync, onload){
-    if(language === "English" || language === "Englisch"){
-        selectedLanguage = "English"
-        languageCode = "en"
-        if(userName === "Fremder"){
-            userName = "Human"
-            document.getElementById("userNameInput").value = "Human"
-            updateUserName(sync)
-        } 
-    }else{
-        selectedLanguage = "German"
-        languageCode = "de"
-        if(userName === "Human"){
-            userName = "Fremder"
-            document.getElementById("userNameInput").value = "Fremder"
-            updateUserName(sync)
-        } 
+    selectedLanguage = language
+    
+    let defaultUserNames = Object.keys(localization).map(key => localization[key].defaultUserName)
+    if(defaultUserNames.includes(userName)){
+        userName = localization[selectedLanguage].defaultUserName
+        document.getElementById("userNameInput").value = localization[selectedLanguage].defaultUserName
+        updateUserName(sync)
     }
     
     if(!sync){
         chrome.storage.sync.set({ "language": selectedLanguage }).then(() => {});
     }
-
-    let buttons = document.querySelectorAll("#language button")
-    buttons.forEach((element) => {element.dataset.state = "inactive"})
-    let selectedButton = document.getElementById(`languageButton${selectedLanguage}`)
-    selectedButton.dataset.state = "active"
     
+    toggleButtons("#language button", `languageButton${selectedLanguage}`)
     updateSearchBarPlaceholder()
     updateSettingsLanguage(selectedLanguage).then()
     if(!onload) updateWeatherInfo().then()
 }
 
 async function updateSettingsLanguage(language){
-    let userNameText = document.getElementById("userNameText")
+    let settings = localization[language]
     
-    let languageText = document.getElementById("languageText")
-    let languageButtonEnglish = document.getElementById(`languageButtonEnglish`)
-    let languageButtonGerman = document.getElementById(`languageButtonGerman`)
+    document.getElementById("userNameText").innerText = settings.userNameText
     
-    let measureUnitText = document.getElementById("measureUnitText")
-    let measureUnitButtonMetric = document.getElementById("measureUnitMetric")
-    let measureUnitButtonImperial = document.getElementById("measureUnitImperial")
+    document.getElementById("languageText").innerText = settings.languageText
+    document.getElementById(`languageButtonEnglish`).innerText = settings.languageButtonEnglish
+    document.getElementById(`languageButtonGerman`).innerText = settings.languageButtonGerman
     
-    let colorSchemeText = document.getElementById("colorSchemeText")
-    let colorSchemeButtonBlue = document.getElementById("colorSchemeBlue")
-    let colorSchemeButtonViolet = document.getElementById("colorSchemeViolet")
-    let colorSchemeButtonGreen = document.getElementById("colorSchemeGreen")
-    let colorSchemeButtonRed = document.getElementById("colorSchemeRed")
+    document.getElementById("measureUnitText").innerText = settings.measureUnitText
+    document.getElementById("measureUnitMetric").innerText = settings.measureUnitMetric
+    document.getElementById("measureUnitImperial").innerText = settings.measureUnitImperial
     
-    let searchEngineText = document.getElementById("searchEngineText")
+    document.getElementById("colorSchemeText").innerText = settings.colorSchemeText
+    document.getElementById("colorSchemeBlue").innerText = settings.colorSchemeBlue
+    document.getElementById("colorSchemeViolet").innerText = settings.colorSchemeViolet
+    document.getElementById("colorSchemeGreen").innerText = settings.colorSchemeGreen
+    document.getElementById("colorSchemeRed").innerText = settings.colorSchemeRed
     
-    let localization = (await (await fetch("../localization.json")).json())[language]
-    
-    userNameText.innerText = localization.userNameText
-    
-    languageText.innerText = localization.languageText
-    languageButtonEnglish.innerText = localization.languageButtonEnglish
-    languageButtonGerman.innerText = localization.languageButtonGerman
-    
-    measureUnitText.innerText = localization.measureUnitText
-    measureUnitButtonMetric.innerText = localization.measureUnitMetric
-    measureUnitButtonImperial.innerText = localization.measureUnitImperial
-    
-    colorSchemeText.innerText = localization.colorSchemeText
-    colorSchemeButtonBlue.innerText = localization.colorSchemeBlue
-    colorSchemeButtonViolet.innerText = localization.colorSchemeViolet
-    colorSchemeButtonGreen.innerText = localization.colorSchemeGreen
-    colorSchemeButtonRed.innerText = localization.colorSchemeRed
-    
-    searchEngineText.innerText = localization.searchEngineText
+    document.getElementById("searchEngineText").innerText = settings.searchEngineText
 }
 
 
 
 //---SETTINGS_MEASURE_UNIT---///////////////////////////////////////////////////////////////////////////////////////////
 let measureUnit = "Metric"
-let temperatureUnit = "°C"
-let speedUnit = "m/s"
 function updateMeasureUnit(unit, sync, onload){
-    if(unit === "Metric" || unit === "Metrisch"){
-        measureUnit = "Metric"
-        temperatureUnit = "°C"
-        speedUnit = "m/s"
-    }else{
-        measureUnit = "Imperial"
-        temperatureUnit = "°F"
-        speedUnit = "mph"
-    }
+    measureUnit = unit
     
-    if(!sync){
-        chrome.storage.sync.set({ "measureUnit": measureUnit }).then(() => {});
-    }
+    if(!sync) chrome.storage.sync.set({ "measureUnit": measureUnit }).then(() => {})
     
-    let buttons = document.querySelectorAll("#measureUnit button")
-    buttons.forEach((element) => {element.dataset.state = "inactive"})
-    let selectedButton = document.getElementById(`measureUnit${measureUnit}`)
-    selectedButton.dataset.state = "active"
-    
+    toggleButtons("#measureUnit button", `measureUnit${measureUnit}`)
     if(!onload) updateWeatherInfo().then()
 }
 
 
 
 //---SETTINGS_COLOR_SCHEME---///////////////////////////////////////////////////////////////////////////////////////////
-let currentColor = "Violet"
 function updateColorScheme(color, sync){
-    if(color === "Blue" || color === "Blau"){
-        currentColor = "Blue"
-    }else if(color === "Violet" || color === "Lila"){
-        currentColor = "Violet"
-    }else if(color === "Green" || color === "Grün"){
-        currentColor = "Green"
-    }else{
-        currentColor = "Red"
-    }
+    if(!sync) chrome.storage.sync.set({ "colorScheme": color }).then(() => {})
     
-    if(!sync){
-        chrome.storage.sync.set({ "colorScheme": currentColor }).then(() => {});
-    }
-    
-    let buttons = document.querySelectorAll("#colorScheme button")
-    buttons.forEach((element) => {element.dataset.state = "inactive"})
-    let selectedButton = document.getElementById(`colorScheme${currentColor}`)
-    selectedButton.dataset.state = "active"
-    
-    setColor(currentColor)
+    toggleButtons("#colorScheme button", `colorScheme${color}`)
+    setColor(color)
 }
 
 function setColor(color){
     switch(color){
         case `Blue`: {
             document.body.style.setProperty("--primaryColor","#033D6B")
-            document.body.style.setProperty("--secondaryColor","#1b79c4")
-            break;
+            return document.body.style.setProperty("--secondaryColor","#1b79c4")
         }
         case `Violet`: {
             document.body.style.setProperty("--primaryColor","#370140")
-            document.body.style.setProperty("--secondaryColor","#720484")
-            break;
+            return document.body.style.setProperty("--secondaryColor","#720484")
         }
         case `Green`: {
             document.body.style.setProperty("--primaryColor","#345502")
-            document.body.style.setProperty("--secondaryColor","#6aaf03")
-            break;
+            return document.body.style.setProperty("--secondaryColor","#6aaf03")
         }
         case `Red`: {
             document.body.style.setProperty("--primaryColor","#450113")
-            document.body.style.setProperty("--secondaryColor","#b0133e")
-            break;
+            return document.body.style.setProperty("--secondaryColor","#b0133e")
         }
     }
 }
@@ -775,13 +664,8 @@ function setColor(color){
 
 //---SETTINGS_SEARCH_ENGINE---//////////////////////////////////////////////////////////////////////////////////////////
 function updateSearchEngine(engine, sync){
-    if(!sync){
-        chrome.storage.sync.set({ "searchEngine": engine }).then(() => {});
-    }
-    let images = document.querySelectorAll("#searchEngine img")
-    images.forEach((element) => {element.dataset.state = "inactive"})
-    let selectedEngine = document.getElementById(engine)
-    selectedEngine.dataset.state = "active"
-    
-    searchEngine = engine;
+    if(!sync) chrome.storage.sync.set({ "searchEngine": engine }).then(() => {})
+
+    searchEngine = engine
+    toggleButtons("#searchEngine img", searchEngine)
 }

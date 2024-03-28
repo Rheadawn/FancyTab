@@ -1,0 +1,10 @@
+{
+  "Metric": {
+    "temperatureUnit" : "°C",
+    "speedUnit" : "m/s"
+  },
+  "Imperial" : {
+    "temperatureUnit" : "°F",
+    "speedUnit" : "mph"
+  }
+}

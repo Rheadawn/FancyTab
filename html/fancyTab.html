@@ -87,15 +87,15 @@
         <div id="settings" class="flex column align-center" style="visibility: hidden;">
             <div id="userName" class="settingsContainer flex row align-center">
                 <label id="userNameText" for="userNameInput" class="pos-rel text medium size-20 settingsTexts">User Name:</label>
-                <input id="userNameInput" class="pos-rel inputField text medium size-16" name="userNameInput" type="text" placeholder="Human" value="Human" maxlength="15"/>
+                <input id="userNameInput" class="pos-rel inputField text medium size-16" name="userNameInput" type="text" placeholder="Friend" value="Friend" maxlength="15"/>
             </div>
             <div id="language" class="settingsContainer flex row align-center">
                 <p id="languageText" class="pos-rel text medium size-20 settingsTexts">Language:</p>
                 <div class="settingsButtons flex row">
-                    <button id="languageButtonEnglish" class="text medium size-16" data-state="active">
+                    <button id="languageButtonEnglish" data-language="English" class="text medium size-16" data-state="active">
                         English
                     </button>
-                    <button id="languageButtonGerman" class="text medium size-16">
+                    <button id="languageButtonGerman" data-language="German" class="text medium size-16">
                         German
                     </button>
                 </div>
@@ -103,10 +103,10 @@
             <div id="measureUnit" class="settingsContainer flex row align-center">
                 <p id="measureUnitText" class="pos-rel text medium size-20 settingsTexts">Measure Unit:</p>
                 <div class="settingsButtons flex row">
-                    <button id="measureUnitMetric" class="text medium size-16" data-state="active">
+                    <button id="measureUnitMetric" data-unit="Metric" class="text medium size-16" data-state="active">
                         Metric
                     </button>
-                    <button id="measureUnitImperial" class="text medium size-16">
+                    <button id="measureUnitImperial" data-unit="Imperial" class="text medium size-16">
                         Imperial
                     </button>
                 </div>
@@ -114,16 +114,16 @@
             <div id="colorScheme" class="settingsContainer flex row align-center">
                 <p id="colorSchemeText" class="pos-rel text medium size-20 settingsTexts">Color Scheme:</p>
                 <div class="settingsButtons flex row">
-                    <button id="colorSchemeBlue" class="text medium size-16" style="background: #033D6B;">
+                    <button id="colorSchemeBlue" data-color="Blue" class="text medium size-16" style="background: #033D6B;">
                         Blue
                     </button>
-                    <button id="colorSchemeViolet" class="text medium size-16" style="background: #370140;" data-state="active">
+                    <button id="colorSchemeViolet" data-color="Violet" class="text medium size-16" style="background: #370140;" data-state="active">
                         Violet
                     </button>
-                    <button id="colorSchemeGreen" class="text medium size-16" style="background: #345502;">
+                    <button id="colorSchemeGreen" data-color="Green" class="text medium size-16" style="background: #345502;">
                         Green
                     </button>
-                    <button id="colorSchemeRed" class="text medium size-16" style="background: #450113;">
+                    <button id="colorSchemeRed" data-color="Red" class="text medium size-16" style="background: #450113;">
                         Red
                     </button>
                 </div>
@@ -148,7 +148,7 @@
 
         <!-- SEARCH_BAR ----------------------------------------------------------------------------------------------->
         <div id="searchBar" class="flex row align-center">
-            <input id="searchBarField" class="pos-rel text medium size-20" type="search" placeholder="Good Morning, Human. Ready to search the world?" autocomplete="off">
+            <input id="searchBarField" class="pos-rel text medium size-20" type="search" placeholder="Good Morning, Friend. Ready to search the world?" autocomplete="off">
             <label for="searchBarField" class="pos-abs" style="visibility: hidden;">Searchbar field</label>
             <button id="searchBarButton">
                 <img id="searchBarIcon" alt="Icon of the search bar" src="../images/searchBarIcon.svg"/>
@@ -306,39 +306,39 @@
             <p id="forecastText" class="text medium size-32">5-DAY FORECAST</p>
             <div id="forecastDays" class="flex row align-center">
                 <div class="forecastDay flex column align-center justify-space-between">
-                    <p class="text regular size-24">WED</p>
+                    <p class="text regular size-24 forecastDayName">WED</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         rainy
                     </span>
-                    <p class="text medium size-16">RAINY</p>
+                    <p class="text medium size-16 forecastDayDescription">RAINY</p>
                 </div>
                 <div class="forecastDay flex column align-center justify-space-between">
-                    <p class="text regular size-24">THU</p>
+                    <p class="text regular size-24 forecastDayName">THU</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         rainy
                     </span>
-                    <p class="text medium size-16">LIGHT RAIN</p>
+                    <p class="text medium size-16 forecastDayDescription">LIGHT RAIN</p>
                 </div>
                 <div class="forecastDay flex column align-center justify-space-between">
-                    <p class="text regular size-24">FRI</p>
+                    <p class="text regular size-24 forecastDayName">FRI</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         cloudy
                     </span>
-                    <p class="text medium size-16">CLOUDY</p>
+                    <p class="text medium size-16 forecastDayDescription">CLOUDY</p>
                 </div>
                 <div class="forecastDay flex column align-center justify-space-between">
-                    <p class="text regular size-24">SAT</p>
+                    <p class="text regular size-24 forecastDayName">SAT</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         clear_day
                     </span>
-                    <p class="text medium size-16">CLEAR DAY</p>
+                    <p class="text medium size-16 forecastDayDescription">CLEAR DAY</p>
                 </div>
                 <div class="forecastDay flex column align-center justify-space-between">
-                    <p class="text regular size-24">SUN</p>
+                    <p class="text regular size-24 forecastDayName">SUN</p>
                     <span class="material-symbols-outlined forecastDayIcon">
                         clear_day
                     </span>
-                    <p class="text medium size-16">CLEAR DAY</p>
+                    <p class="text medium size-16 forecastDayDescription">CLEAR DAY</p>
                 </div>
             </div>
         </div>
