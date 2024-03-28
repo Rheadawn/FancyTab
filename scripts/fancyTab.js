@@ -21,9 +21,9 @@ let credentials
 let localization
 let measureUnits
 async function getConfigFiles() {
-    credentials = await (await fetch("../config.json")).json()
-    localization = await (await fetch("../localization.json")).json()
-    measureUnits = await (await fetch("../measureUnit.json")).json()
+    credentials = await (await fetch("../config/config.json")).json()
+    localization = await (await fetch("../config/localization.json")).json()
+    measureUnits = await (await fetch("../config/measureUnit.json")).json()
 }
 
 

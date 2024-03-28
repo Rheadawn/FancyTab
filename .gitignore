@@ -3,4 +3,5 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
-config.json
+/config/config.json
+.idea/.idea.Fancy Tab/.idea/inspectionProfiles/Project_Default.xml
