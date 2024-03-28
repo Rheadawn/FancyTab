@@ -3,23 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Fancy New Tab</title>
-    <!-- CSS files -->
+    
+    <!-- CSS FILES ---------------------------------------------------------------------------------------------------->
     <link rel="stylesheet" href="resetCss.css">
     <link rel="stylesheet" href="fancyTab.css">
-    <!-- Material icons -->
+    <!-- //CSS FILES -------------------------------------------------------------------------------------------------->
+    
+    
+    <!-- MATERIAL ICONS ----------------------------------------------------------------------------------------------->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0">
-    <!-- Jost font -->
+    <!-- //MATERIAL ICONS --------------------------------------------------------------------------------------------->
+    
+    
+    <!-- JOST FONT ---------------------------------------------------------------------------------------------------->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap">
+    <!-- //JOST FONT -------------------------------------------------------------------------------------------------->
 </head>
+
+
+
 <body class="flex column align-center">
+    <!-- BACKGROUND_IMAGE_AND_BUTTONS --------------------------------------------------------------------------------->
     <img id="powerButton" class="pos-abs square-50x50" alt="Button that closes the tab" src="../images/powerButton.svg">
     <div id="backgroundImageButtons" class="pos-abs flex row align-center">
         <img id="colorButton" class="square-50x50" alt="Button that switches between colorful and greyscale background picture" src="../images/colorOn.svg">
         <img id="refreshButton" class="square-40x40" alt="Button that determines if the background image gets reset for every new tab" src="../images/imageRefreshOn.svg">
     </div>
     <div id="backgroundImage" class="pos-abs"></div>
+    <!-- //BACKGROUND_IMAGE_AND_BUTTONS ------------------------------------------------------------------------------->
+    
+    
+    
+    <!-- SHORTCUT_DIALOG ---------------------------------------------------------------------------------------------->
     <dialog id="shortcutDialog" class="align-center">
         <div id="shortcutURL" class="settingsContainer flex row align-center" style="gap:10px;">
             <label id="shortcutURLText" for="shortcutURLInput" class="pos-rel text medium size-20 settingsTexts">Shortcut URL:</label>
@@ -30,9 +47,19 @@
             <input type="file" id="shortcutImageInput" class="pos-rel inputField text medium size-16 shortcutInputField" accept="image/png, image/jpeg, image/svg+xml" style="width:270px;"/>
         </div>
     </dialog>
+    <!-- //SHORTCUT_DIALOG -------------------------------------------------------------------------------------------->
+
+
+    
+    <!-- DASHBOARD ---------------------------------------------------------------------------------------------------->
     <div id="dashboard" class="flex column align-center">
+        <!-- DATE ----------------------------------------------------------------------------------------------------->
         <div id="time" class="text regular size-128">12:42</div>
         <div id="day" class="text medium">MONDAY</div>
+        <!-- //DATE --------------------------------------------------------------------------------------------------->
+
+        
+        <!-- SHORTCUTS ------------------------------------------------------------------------------------------------>
         <div id="shortcuts" class="flex column align-center">
             <div id="upperShortcuts" class="flex row justify-space-between">
                 <div class="shortcutBackground align-center justify-center square-75x75">
@@ -54,6 +81,10 @@
                 </div>
             </div>
         </div>
+        <!-- //SHORTCUTS ---------------------------------------------------------------------------------------------->
+
+
+        <!-- SETTINGS ------------------------------------------------------------------------------------------------->
         <div id="settings" class="flex column align-center" style="visibility: hidden;">
             <div id="userName" class="settingsContainer flex row align-center">
                 <label id="userNameText" for="userNameInput" class="pos-rel text medium size-20 settingsTexts">User Name:</label>
@@ -108,7 +139,15 @@
                 </div>
             </div>
         </div>
+        <!-- //SETTINGS ----------------------------------------------------------------------------------------------->
+
+
+        <!-- DATE ----------------------------------------------------------------------------------------------------->
         <p id="date" class="text medium size-32">01.03.2024</p>
+        <!-- //DATE --------------------------------------------------------------------------------------------------->
+
+
+        <!-- SEARCH_BAR ----------------------------------------------------------------------------------------------->
         <div id="searchBar" class="flex row align-center">
             <input id="searchBarField" class="pos-rel text medium size-20" type="search" placeholder="Good Morning, Human. Ready to search the world?" autocomplete="off">
             <label for="searchBarField" class="pos-abs" style="visibility: hidden;">Searchbar field</label>
@@ -117,8 +156,15 @@
             </button>
             <img id="settingsIcon" class="square-40x40" alt="Icon of settings" src="../images/settingsIcon.svg"/>
         </div>
+        <!-- //SEARCH_BAR --------------------------------------------------------------------------------------------->
     </div>
+    <!-- //DASHBOARD -------------------------------------------------------------------------------------------------->
+
+
+    
+    <!-- WEATHER_INFO ------------------------------------------------------------------------------------------------->
     <div id="weatherInfoContainer" class="pos-abs flex row justify-space-between align-flex-start">
+        <!-- TEMPERATURE ---------------------------------------------------------------------------------------------->
         <div id="temperatureColumn" class="flex row align-center justify-space-between">
             <div id="temperatureColumnDivLeft" class="temperatureColumnDiv flex column align-center justify-space-between">
                 <div id="IconAndRainAmount" class="pos-rel square-60x60">
@@ -160,6 +206,10 @@
                 </div>
             </div>
         </div>
+        <!-- //TEMPERATURE -------------------------------------------------------------------------------------------->
+
+
+        <!-- WIND ----------------------------------------------------------------------------------------------------->
         <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
         <div class="simpleWeatherColumn flex column justify-center">
             <div class="weatherColumnDiv flex row align-center justify-flex-start">
@@ -189,6 +239,10 @@
                 </p>
             </div>
         </div>
+        <!-- //WIND --------------------------------------------------------------------------------------------------->
+
+
+        <!-- HUMIDITY_VISIBILITY -------------------------------------------------------------------------------------->
         <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
         <div class="simpleWeatherColumn flex column justify-center">
             <div class="weatherColumnDiv flex row align-center justify-flex-start">
@@ -244,6 +298,10 @@
                 </p>
             </div>
         </div>
+        <!-- //HUMIDITY_VISIBILITY ------------------------------------------------------------------------------------>
+
+
+        <!-- FORECAST ------------------------------------------------------------------------------------------------->
         <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
         <div id="forecastColumn" class="flex column align-center justify-flex-start">
             <p id="forecastText" class="text medium size-32">5-DAY FORECAST</p>
@@ -285,6 +343,10 @@
                 </div>
             </div>
         </div>
+        <!-- //FORECAST ----------------------------------------------------------------------------------------------->
+
+
+        <!-- DAY_NIGHT_CYCLE ------------------------------------------------------------------------------------------>
         <img alt="separating line" src="../images/weatherColumnSeparator.svg"/>
         <div id="dayCycleColumn" class="flex column align-center justify-space-between">
             <p id="dayCycleText" class="text medium size-32">DAY CYCLE</p>
@@ -304,7 +366,9 @@
                 <img id="dayCycleIcon" class="pos-abs" alt="icon that shows the time of day" src="../images/dayCycleIcon.svg"/>
             </div>
         </div>
+        <!-- //DAY_NIGHT_CYCLE ---------------------------------------------------------------------------------------->
     </div>
+    <!-- //WEATHER_INFO ----------------------------------------------------------------------------------------------->
     <script src="../scripts/fancyTab.js"></script>
 </body>
 </html>
